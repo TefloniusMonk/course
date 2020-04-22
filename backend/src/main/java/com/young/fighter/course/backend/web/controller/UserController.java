@@ -14,8 +14,8 @@ public class UserController {
     }
 
     @PostMapping("/")
-    public UserView save(@RequestBody UserView view) {
-        return userService.save(view);
+    public String save(@RequestBody UserView view) {
+        return userService.save(view).toString();
     }
 
     @DeleteMapping("/{id}")
@@ -24,7 +24,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserView findById(@PathVariable Long id) {
-        return userService.findById(id);
+    public String findById(@PathVariable Long id) {
+        return userService.findById(id).toString();
     }
 }

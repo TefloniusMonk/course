@@ -3,16 +3,17 @@ package com.young.fighter.course.backend.db.repository.data;
 import com.young.fighter.course.backend.db.entity.Product;
 import com.young.fighter.course.backend.db.repository.ProductRepository;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ProductData implements ProductRepository {
-    private List<Product> products = Arrays.asList(
+    private List<Product> products = Stream.of(
             new Product(1L, 1222L, "Name1", "desc"),
             new Product(2L, 1223L, "Name2", "desc2"),
             new Product(3L, 1224L, "Name3", "desc3"),
             new Product(4L, 1225L, "Name4", "desc4")
-    );
+    ).collect(Collectors.toList());
 
     @Override
     public Product save(Product entity) {
