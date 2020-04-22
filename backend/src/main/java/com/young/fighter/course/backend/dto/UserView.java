@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -16,5 +15,5 @@ public class UserView implements Serializable {
     private String pass;
     private String email;
     private String fullName;
-    private LocalDate birthDate;
+//    private LocalDate birthDate;
 }

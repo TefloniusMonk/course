@@ -11,7 +11,7 @@ public class UserMapper {
         view.setPass(entity.getPass());
         view.setEmail(entity.getEmail());
         view.setFullName(entity.getFullName());
-        view.setBirthDate(entity.getBirthDate());
+//        view.setBirthDate(entity.getBirthDate());
         return view;
     }
 
@@ -22,7 +22,7 @@ public class UserMapper {
         entity.setPass(view.getPass());
         entity.setEmail(view.getEmail());
         entity.setFullName(view.getFullName());
-        entity.setBirthDate(view.getBirthDate());
+//        entity.setBirthDate(view.getBirthDate());
         return entity;
     }
 }

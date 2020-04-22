@@ -7,13 +7,17 @@ public class BillMapper {
 
     public BillView map(Bill entity) {
         BillView view = new BillView();
-        ///
+        view.setBillId(entity.getBillId());
+        view.setCustomerId(entity.getCustomerId());
+        view.setProducts(entity.getProducts());
         return view;
     }
 
     public Bill map(BillView view) {
         Bill entity = new Bill();
-        ///
+        entity.setBillId(view.getBillId());
+        entity.setCustomerId(view.getCustomerId());
+        entity.setProducts(view.getProducts());
         return entity;
     }
 }
