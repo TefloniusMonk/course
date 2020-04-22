@@ -1,0 +1,58 @@
+plugins {
+    id 'org.springframework.boot' version '2.2.2.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id 'java'
+    id 'war'
+    id "org.gretty" version "3.0.2"
+}
+
+group = 'com.young.fighter.course'
+version = '0.0.1'
+
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://plugins.gradle.org/m2/"
+    }
+}
+
+
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation  'javax.servlet:javax.servlet-api'
+    implementation 'javax.servlet:jstl'
+    implementation 'org.springframework:spring-webmvc'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+}
+
+gretty {
+    httpPort = 8081
+}
+
+task explodedWar(type: Sync) {
+    into "${buildDir}/libs/exploded"
+    with war
+}
+
+test {
+    useJUnitPlatform()
+}
