@@ -13,5 +13,5 @@ import java.util.List;
 public class BillView implements Serializable {
     private Long billId;
     private Long customerId;
-    private List<Long> products;
+    private List<ProductView> products;
 }

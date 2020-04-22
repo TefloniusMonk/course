@@ -4,7 +4,7 @@ import com.young.fighter.course.backend.db.entity.Product;
 import com.young.fighter.course.backend.dto.ProductView;
 
 public class ProductMapper {
-    public ProductView map(Product entity) {
+    public static ProductView map(Product entity) {
         ProductView view = new ProductView();
         view.setProductId(entity.getProductId());
         view.setCost(entity.getCost());
@@ -13,7 +13,7 @@ public class ProductMapper {
         return view;
     }
 
-    public Product map(ProductView view) {
+    public static Product map(ProductView view) {
         Product entity = new Product();
         entity.setProductId(view.getProductId());
         entity.setCost(view.getCost());

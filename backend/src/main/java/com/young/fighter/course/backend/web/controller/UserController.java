@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.young.fighter.course.backend.dto.UserView;
 import com.young.fighter.course.backend.service.api.UserService;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -12,6 +13,7 @@ public class UserController {
     private UserService userService;
     private ObjectMapper objectMapper = new ObjectMapper();
 
+    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }

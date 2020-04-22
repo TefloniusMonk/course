@@ -4,10 +4,12 @@ import com.young.fighter.course.backend.db.repository.BillRepository;
 import com.young.fighter.course.backend.dto.BillView;
 import com.young.fighter.course.backend.mapper.BillMapper;
 import com.young.fighter.course.backend.service.api.BillService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class DefaultBillService implements BillService {
     private BillRepository billRepository;
     private BillMapper mapper = new BillMapper();
@@ -31,7 +33,7 @@ public class DefaultBillService implements BillService {
     @Override
     public void delete(Long id) {
         if (billRepository.findById(id) != null) {
-            billRepository.delete(id);
+            billRepository.deleteById(id);
         } else {
             System.out.println("No such entity");
         }
@@ -40,7 +42,7 @@ public class DefaultBillService implements BillService {
     @Override
     public BillView findById(Long id) {
         if (billRepository.findById(id) != null) {
-            return mapper.map(billRepository.findById(id));
+            return mapper.map(billRepository.findById(id).orElseThrow(NullPointerException::new));
         } else {
             System.out.println("No such entity");
         }

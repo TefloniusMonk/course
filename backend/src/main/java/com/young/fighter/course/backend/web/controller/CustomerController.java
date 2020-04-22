@@ -2,6 +2,7 @@ package com.young.fighter.course.backend.web.controller;
 
 import com.young.fighter.course.backend.dto.CustomerView;
 import com.young.fighter.course.backend.service.api.CustomerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 public class CustomerController {
     private CustomerService customerService;
 
+    @Autowired
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }

@@ -3,7 +3,6 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
     id 'java'
     id 'war'
-    id "org.gretty" version "3.0.2"
 }
 
 group = 'com.young.fighter.course'
@@ -12,9 +11,6 @@ version = '0.0.1'
 
 repositories {
     mavenCentral()
-    maven {
-        url "https://plugins.gradle.org/m2/"
-    }
 }
 
 
@@ -34,10 +30,9 @@ repositories {
 }
 
 dependencies {
-    implementation  'javax.servlet:javax.servlet-api'
-    implementation 'javax.servlet:jstl'
-    implementation 'org.springframework:spring-webmvc'
-    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation  'org.springframework.boot:spring-boot-starter-web'
+    implementation  'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation  'org.postgresql:postgresql'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
@@ -45,9 +40,6 @@ dependencies {
     }
 }
 
-gretty {
-    httpPort = 8081
-}
 
 task explodedWar(type: Sync) {
     into "${buildDir}/libs/exploded"

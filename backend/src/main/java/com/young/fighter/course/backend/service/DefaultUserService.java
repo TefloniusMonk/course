@@ -4,7 +4,9 @@ import com.young.fighter.course.backend.db.repository.UserRepository;
 import com.young.fighter.course.backend.dto.UserView;
 import com.young.fighter.course.backend.mapper.UserMapper;
 import com.young.fighter.course.backend.service.api.UserService;
+import org.springframework.stereotype.Service;
 
+@Service
 public class DefaultUserService implements UserService {
     private UserRepository userRepository;
     private UserMapper mapper = new UserMapper();
@@ -29,7 +31,7 @@ public class DefaultUserService implements UserService {
     @Override
     public void delete(Long id) {
         if (userRepository.findById(id) != null) {
-            userRepository.delete(id);
+            userRepository.deleteById(id);
         } else {
             System.out.println("No such entity");
         }
@@ -38,7 +40,7 @@ public class DefaultUserService implements UserService {
     @Override
     public UserView findById(Long id) {
         if (userRepository.findById(id) != null) {
-            return mapper.map(userRepository.findById(id));
+            return mapper.map(userRepository.findById(id).orElseThrow(NullPointerException::new));
         } else {
             System.out.println("No such entity");
         }

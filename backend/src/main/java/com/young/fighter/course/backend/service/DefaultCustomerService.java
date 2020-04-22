@@ -4,10 +4,12 @@ import com.young.fighter.course.backend.db.repository.CustomerRepository;
 import com.young.fighter.course.backend.dto.CustomerView;
 import com.young.fighter.course.backend.mapper.CustomerMapper;
 import com.young.fighter.course.backend.service.api.CustomerService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class DefaultCustomerService implements CustomerService {
     private CustomerRepository customerRepository;
     private CustomerMapper mapper = new CustomerMapper();
@@ -32,7 +34,7 @@ public class DefaultCustomerService implements CustomerService {
     @Override
     public void delete(Long id) {
         if (customerRepository.findById(id) != null) {
-            customerRepository.delete(id);
+            customerRepository.deleteById(id);
         } else {
             System.out.println("No such entity");
         }
@@ -41,7 +43,7 @@ public class DefaultCustomerService implements CustomerService {
     @Override
     public CustomerView findById(Long id) {
         if (customerRepository.findById(id) != null) {
-            return mapper.map(customerRepository.findById(id));
+            return mapper.map(customerRepository.findById(id).orElseThrow(NullPointerException::new));
         } else {
             System.out.println("No such entity");
         }
