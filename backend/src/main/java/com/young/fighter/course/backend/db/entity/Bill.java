@@ -4,18 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(schema = "course", name = "bill")
 public class Bill {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long billId;
     private Long customerId;
     @OneToMany(fetch = FetchType.LAZY)

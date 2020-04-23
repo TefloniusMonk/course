@@ -1,59 +1,75 @@
 package com.young.fighter.course.backend.service;
 
+import com.young.fighter.course.backend.db.entity.Customer;
 import com.young.fighter.course.backend.db.repository.CustomerRepository;
 import com.young.fighter.course.backend.dto.CustomerView;
-import com.young.fighter.course.backend.mapper.CustomerMapper;
+import com.young.fighter.course.backend.exception.BusinessLogicException;
 import com.young.fighter.course.backend.service.api.CustomerService;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class DefaultCustomerService implements CustomerService {
     private CustomerRepository customerRepository;
-    private CustomerMapper mapper = new CustomerMapper();
+    private final ModelMapper mapper;
 
-    public DefaultCustomerService(CustomerRepository customerRepository) {
+    @Autowired
+    public DefaultCustomerService(CustomerRepository customerRepository, ModelMapper mapper) {
         this.customerRepository = customerRepository;
+        this.mapper = mapper;
     }
 
 
     @Override
     public CustomerView save(CustomerView view) {
         if (view.getCustomerId() != null) {
-            if (customerRepository.findById(view.getCustomerId()) != null) {
-                return mapper.map(customerRepository.save(mapper.map(view)));
+            if (customerRepository.findById(view.getCustomerId()).isPresent()) {
+                CustomerView customerView = mapper.map(customerRepository.save(
+                        mapper.map(view, Customer.class)
+                        )
+                        , CustomerView.class);
+                log.info("Creating new customer: {}", customerView.toString());
+                return customerView;
             } else {
-                System.out.println("No such entity");
+                log.error("Cannot find customer with id: {}", view.getCustomerId());
+                throw new BusinessLogicException("entity.not.exist");
             }
         }
-        return mapper.map(customerRepository.save(mapper.map(view)));
+        log.info("Updating product: {}", view.toString());
+        return mapper.map(customerRepository.save(mapper.map(view, Customer.class)), CustomerView.class);
     }
 
     @Override
     public void delete(Long id) {
-        if (customerRepository.findById(id) != null) {
+        if (customerRepository.findById(id).isPresent()) {
+            log.info("Deleting customer with id: {}", id);
             customerRepository.deleteById(id);
         } else {
-            System.out.println("No such entity");
+            log.error("Can not delete product with id: {}", id);
+            throw new BusinessLogicException("entity.not.exist");
         }
     }
 
     @Override
     public CustomerView findById(Long id) {
-        if (customerRepository.findById(id) != null) {
-            return mapper.map(customerRepository.findById(id).orElseThrow(NullPointerException::new));
+        if (customerRepository.findById(id).isPresent()) {
+            return mapper.map(customerRepository.findById(id), CustomerView.class);
         } else {
-            System.out.println("No such entity");
+            log.error("Can not find customer with id: {}", id);
+            throw new BusinessLogicException("entity.not.exist");
         }
-        return null;
     }
 
     @Override
     public List<CustomerView> findAll() {
         return customerRepository.findAll().stream()
-                .map(entity -> mapper.map(entity))
+                .map(entity -> mapper.map(entity, CustomerView.class))
                 .collect(Collectors.toList());
     }
 }

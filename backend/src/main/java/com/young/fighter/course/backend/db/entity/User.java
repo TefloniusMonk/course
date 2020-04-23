@@ -4,20 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import java.time.LocalDate;
+import javax.persistence.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(schema = "org", name = "user")
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long userId;
     private String login;
-    private String pass;
+    private String password;
     private String email;
-    private String fullName;
-    private LocalDate birthDate;
 }

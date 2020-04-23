@@ -12,8 +12,6 @@ import java.io.Serializable;
 public class UserView implements Serializable {
     private Long userId;
     private String login;
-    private String pass;
+    private String password;
     private String email;
-    private String fullName;
-//    private LocalDate birthDate;
 }

@@ -2,10 +2,12 @@ package com.young.fighter.course.backend.service;
 
 import com.young.fighter.course.backend.dto.CatalogView;
 import com.young.fighter.course.backend.service.api.CatalogService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class DefaultCatalogService implements CatalogService {
     @Override
