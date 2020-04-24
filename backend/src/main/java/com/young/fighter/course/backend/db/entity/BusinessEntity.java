@@ -12,18 +12,18 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 public abstract class BusinessEntity {
     @Column(name = "created")
-    private LocalDateTime created;
+    final protected LocalDateTime created = LocalDateTime.now();
     @Column(name = "updated")
-    private LocalDateTime updated;
+    protected LocalDateTime updated;
 
     @PrePersist
     public void prePersist() {
-        this.created = LocalDateTime.now();
         this.updated = this.created;
     }
 
     @PreUpdate
     public void preUpdate() {
+
         this.updated = LocalDateTime.now();
     }
 }

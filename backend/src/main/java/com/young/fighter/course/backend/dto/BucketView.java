@@ -8,8 +8,9 @@ import java.util.Set;
 
 @Data
 @AllArgsConstructor
-public class CatalogView implements Serializable {
-    private Long catalogId;
-    private String catalogName;
+public class BucketView implements Serializable {
+    private Long bucketId;
+    private CustomerView customer;
     private Set<ProductView> products;
+    private Long totalCost;
 }

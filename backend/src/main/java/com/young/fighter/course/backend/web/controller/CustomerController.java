@@ -5,7 +5,8 @@ import com.young.fighter.course.backend.service.api.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/customer")
@@ -18,22 +19,22 @@ public class CustomerController {
     }
 
     @PostMapping("/")
-    public CustomerView save(@RequestBody CustomerView view) {
+    public CustomerView save(@RequestBody @Valid CustomerView view) {
         return customerService.save(view);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable @NotNull Long id) {
         customerService.delete(id);
     }
 
     @GetMapping("/{id}")
-    public CustomerView findById(@PathVariable Long id) {
+    public CustomerView findById(@PathVariable @NotNull Long id) {
         return customerService.findById(id);
     }
 
-    @GetMapping("/")
-    public List<CustomerView> findAll() {
-        return customerService.findAll();
-    }
+//    @GetMapping("/")
+//    public List<CustomerView> findAll() {
+//        return customerService.findAll();
+//    }
 }

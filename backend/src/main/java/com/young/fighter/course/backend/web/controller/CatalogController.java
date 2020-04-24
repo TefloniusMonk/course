@@ -5,6 +5,8 @@ import com.young.fighter.course.backend.service.api.CatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
@@ -12,18 +14,19 @@ import java.util.List;
 public class CatalogController {
     private CatalogService catalogService;
 
+    //Каталог сможет редактировать только админ
     @Autowired
     public CatalogController(CatalogService catalogService) {
         this.catalogService = catalogService;
     }
 
     @PostMapping("/")
-    public CatalogView save(@RequestBody CatalogView view) {
+    public CatalogView save(@RequestBody @Valid CatalogView view) {
         return catalogService.save(view);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable @NotNull Long id) {
         catalogService.delete(id);
     }
 

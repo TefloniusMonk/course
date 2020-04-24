@@ -7,5 +7,5 @@ public interface UserService {
 
     void delete(Long id);
 
-    UserView findById(Long id);
+//    UserView findById(Long id);  Maybe will need later
 }

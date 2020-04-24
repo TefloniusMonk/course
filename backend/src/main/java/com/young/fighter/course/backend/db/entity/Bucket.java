@@ -23,7 +23,7 @@ public class Bucket extends BusinessEntity {
     @OneToOne(fetch = FetchType.LAZY, targetEntity = Customer.class)
     private Customer customer;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "bucket_products",
             schema = "course",

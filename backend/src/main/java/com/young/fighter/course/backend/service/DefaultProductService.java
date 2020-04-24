@@ -6,10 +6,12 @@ import com.young.fighter.course.backend.dto.ProductView;
 import com.young.fighter.course.backend.exception.BusinessLogicException;
 import com.young.fighter.course.backend.service.api.ProductService;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +26,6 @@ public class DefaultProductService implements ProductService {
         this.productRepository = productRepository;
         this.mapper = mapper;
     }
-
 
     @Override
     public ProductView save(ProductView view) {
@@ -54,19 +55,28 @@ public class DefaultProductService implements ProductService {
     }
 
     @Override
+    @Transactional
     public ProductView findById(Long id) {
         if (productRepository.findById(id).isPresent()) {
-            return mapper.map(productRepository.findById(id), ProductView.class);
+            Product product = productRepository.findById(id).get();
+            Hibernate.initialize(product.getBuckets());
+            Hibernate.initialize(product.getCatalogs());
+            return mapper.map(product, ProductView.class);
         } else {
-            log.error("User with id {} doesn't exist", id);
+            log.error("Product with id {} doesn't exist", id);
             throw new BusinessLogicException("entity.not.exist");
         }
     }
 
     @Override
+    @Transactional
     public List<ProductView> findAll() {
         return productRepository.findAll().stream()
-                .map(entity -> mapper.map(entity, ProductView.class))
+                .map(entity -> {
+                    Hibernate.initialize(entity.getBuckets());
+                    Hibernate.initialize(entity.getCatalogs());
+                    return mapper.map(entity, ProductView.class);
+                })
                 .collect(Collectors.toList());
     }
 }

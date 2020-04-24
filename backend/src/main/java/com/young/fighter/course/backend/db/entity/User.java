@@ -18,9 +18,11 @@ public class User extends BusinessEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long userId;
 
+    @Column(name = "login", nullable = false, unique = true)
     private String login;
 
     private String password;
 
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 }

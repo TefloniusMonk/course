@@ -23,7 +23,7 @@ public class Bill extends BusinessEntity {
     @ManyToOne(targetEntity = Customer.class, fetch = FetchType.LAZY)
     private Customer customer;
 
-    @OneToMany(mappedBy = "productId", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = Product.class)
+    @OneToMany(targetEntity = Product.class)
     private List<Product> products;
 
     @Column(name = "total_cost")

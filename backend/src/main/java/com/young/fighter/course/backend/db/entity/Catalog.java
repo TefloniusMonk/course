@@ -19,8 +19,9 @@ public class Catalog extends BusinessEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long catalogId;
 
+    private String catalogName;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "catalog_products",
             schema = "course",

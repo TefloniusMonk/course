@@ -26,9 +26,9 @@ public class Product extends BusinessEntity {
 
     private String productDesc;
 
-    @ManyToMany(mappedBy = "products")
+    @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY)
     private Set<Bucket> buckets = new HashSet<Bucket>();
 
-    @ManyToMany(mappedBy = "products")
-    private Set<Catalog> catalogs;
+    @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY)
+    private Set<Catalog> catalogs = new HashSet<Catalog>();
 }

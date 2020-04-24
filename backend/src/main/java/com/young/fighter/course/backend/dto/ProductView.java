@@ -11,7 +11,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class ProductView implements Serializable {
     private Long productId;
-    private Long cost;
+    private Long price;
     private String productName;
     private String productDesc;
 }

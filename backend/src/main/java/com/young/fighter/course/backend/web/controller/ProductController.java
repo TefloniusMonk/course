@@ -5,6 +5,8 @@ import com.young.fighter.course.backend.service.api.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
@@ -18,12 +20,12 @@ public class ProductController {
     }
 
     @PostMapping("/")
-    public ProductView save(@RequestBody ProductView view) {
+    public ProductView save(@RequestBody @Valid ProductView view) {
         return productService.save(view);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable @NotNull Long id) {
         productService.delete(id);
     }
 
