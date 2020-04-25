@@ -25,4 +25,7 @@ public class User extends BusinessEntity {
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
+
+    @OneToOne(targetEntity = Customer.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Customer customer;
 }

@@ -1,7 +1,7 @@
 package com.young.fighter.course.backend.web.controller;
 
-import com.young.fighter.course.backend.dto.BucketView;
-import com.young.fighter.course.backend.service.api.BucketService;
+import com.young.fighter.course.backend.dto.BasketView;
+import com.young.fighter.course.backend.service.api.BasketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,16 +10,16 @@ import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/bucket")
-public class BucketController {
-    private BucketService bucketService;
+public class BasketController {
+    private BasketService bucketService;
 
     @Autowired
-    public BucketController(BucketService bucketService) {
+    public BasketController(BasketService bucketService) {
         this.bucketService = bucketService;
     }
 
     @PostMapping("/")
-    public BucketView save(@RequestBody @Valid BucketView view) {
+    public BasketView save(@RequestBody @Valid BasketView view) {
         return bucketService.saveToBucket(view);
     }
 
@@ -29,7 +29,7 @@ public class BucketController {
     }
 
     @GetMapping("/{id}")
-    public BucketView findById(@PathVariable Long id) {
+    public BasketView findById(@PathVariable Long id) {
         return bucketService.findByCustomerId(id);
     }
 

@@ -8,4 +8,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsUserByLoginOrAndEmailAndAndUserIdNot(String login, String email, Long id);
 
     boolean existsUserByLoginOrEmail(String login, String email);
+
+    void deleteByCustomerCustomerId(Long id);
+
+    boolean existsUserByCustomerCustomerId(Long id);
 }

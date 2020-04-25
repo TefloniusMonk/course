@@ -6,31 +6,30 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(schema = "course", name = "bucket")
-public class Bucket extends BusinessEntity {
+@Table(schema = "course", name = "busket")
+public class Basket extends BusinessEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long bucketId;
+    private Long basketId;
 
     @OneToOne(fetch = FetchType.LAZY, targetEntity = Customer.class)
     private Customer customer;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "bucket_products",
+            name = "basket_products",
             schema = "course",
             joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "bucket_id")
+            inverseJoinColumns = @JoinColumn(name = "basket_id")
     )
-    private Set<Product> products = new HashSet<Product>();
+    private List<Product> products;
 
     private Long totalCost;
 }

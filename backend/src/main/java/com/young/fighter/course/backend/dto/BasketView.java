@@ -2,15 +2,17 @@ package com.young.fighter.course.backend.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class BucketView implements Serializable {
+@NoArgsConstructor
+public class BasketView implements Serializable {
     private Long bucketId;
     private CustomerView customer;
-    private Set<ProductView> products;
+    private List<ProductView> products;
     private Long totalCost;
 }

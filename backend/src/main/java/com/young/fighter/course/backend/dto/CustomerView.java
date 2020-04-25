@@ -12,8 +12,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class CustomerView implements Serializable {
     private Long customerId;
-    private Long userId;
     private String email;
     private String fullName;
     private LocalDate birthDate;
+    private BasketView basket;
+    private Long userId;
 }

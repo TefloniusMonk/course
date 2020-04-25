@@ -6,6 +6,7 @@ import com.young.fighter.course.backend.dto.UserView;
 import com.young.fighter.course.backend.exception.BusinessLogicException;
 import com.young.fighter.course.backend.service.api.UserService;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
+import static com.young.fighter.course.backend.data.UserData.getUserView;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,12 +28,11 @@ public class UserServiceTest {
     @Autowired
     private UserRepository userRepository;
 
-    private UserView userView;
+    private UserView userView = getUserView();
 
     @BeforeEach
     void before() {
         userRepository.deleteAll();
-        getData();
     }
 
     @Test
@@ -97,7 +98,8 @@ public class UserServiceTest {
         assertEquals(0, users.size());
     }
 
-    private void getData() {
-        userView = new UserView(null, "login", "password", "email");
+    @AfterEach
+    void after() {
+        userRepository.deleteAll();
     }
 }

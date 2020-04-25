@@ -1,16 +1,14 @@
 package com.young.fighter.course.backend.db.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
+@EqualsAndHashCode(callSuper = false)
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -27,8 +25,8 @@ public class Product extends BusinessEntity {
     private String productDesc;
 
     @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY)
-    private Set<Bucket> buckets = new HashSet<Bucket>();
+    private List<Basket> baskets;
 
     @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY)
-    private Set<Catalog> catalogs = new HashSet<Catalog>();
+    private List<Catalog> catalogs;
 }

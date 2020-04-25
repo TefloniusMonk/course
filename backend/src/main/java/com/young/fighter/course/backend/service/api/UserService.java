@@ -1,11 +1,18 @@
 package com.young.fighter.course.backend.service.api;
 
+import com.young.fighter.course.backend.db.entity.User;
 import com.young.fighter.course.backend.dto.UserView;
 
 public interface UserService {
-    UserView save(UserView entity);
+    UserView save(UserView view);
+
+    User save(User entity);
 
     void delete(Long id);
 
-//    UserView findById(Long id);  Maybe will need later
+    void deleteByCustomerId(Long customerId);
+
+    boolean existUser(Long id);
+
+    User findById(Long id);
 }

@@ -10,6 +10,8 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 public class DefaultUserService implements UserService {
@@ -47,6 +49,12 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
+    public User save(User entity) {
+        log.info("Updating user: {}", entity.getUserId());
+        return userRepository.save(entity);
+    }
+
+    @Override
     public void delete(Long id) {
         if (userRepository.findById(id).isPresent()) {
             log.info("Deleting customer with id: {}", id);
@@ -57,13 +65,30 @@ public class DefaultUserService implements UserService {
         }
     }
 
-//    @Override
-//    public UserView findById(Long id) {
-//        if (userRepository.findById(id).isPresent()) {
-//            return mapper.map(userRepository.findById(id), UserView.class);
-//        } else {
-//            log.error("User with id {} doesn't exist", id);
-//            throw new BusinessLogicException("entity.not.exist");
-//        }
-//    }
+    @Override
+    public void deleteByCustomerId(Long customerId) {
+        if (userRepository.existsUserByCustomerCustomerId(customerId)) {
+            userRepository.deleteByCustomerCustomerId(customerId);
+        } else {
+            log.error("Can not delete user with customerId: {}", customerId);
+            throw new BusinessLogicException("entity.not.exist");
+        }
+    }
+
+
+    @Override
+    public boolean existUser(Long id) {
+        return userRepository.existsById(id);
+    }
+
+    @Override
+    public User findById(Long id) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            return userOptional.get();
+        } else {
+            log.error("User with id {} doesn't exist", id);
+            throw new BusinessLogicException("entity.not.exist");
+        }
+    }
 }

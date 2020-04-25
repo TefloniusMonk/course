@@ -19,12 +19,17 @@ public class Customer extends BusinessEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long customerId;
 
-    @OneToOne(fetch = FetchType.LAZY, targetEntity = Bucket.class)
-    private Bucket bucket;
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = Basket.class)
+    private Basket basket;
 
     private String email;
 
     private String fullName;
 
     private LocalDate birthDate;
+
+    @OneToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+    private User user;
+
+
 }

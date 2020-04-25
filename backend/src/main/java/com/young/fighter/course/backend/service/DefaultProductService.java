@@ -59,7 +59,7 @@ public class DefaultProductService implements ProductService {
     public ProductView findById(Long id) {
         if (productRepository.findById(id).isPresent()) {
             Product product = productRepository.findById(id).get();
-            Hibernate.initialize(product.getBuckets());
+            Hibernate.initialize(product.getBaskets());
             Hibernate.initialize(product.getCatalogs());
             return mapper.map(product, ProductView.class);
         } else {
@@ -73,10 +73,16 @@ public class DefaultProductService implements ProductService {
     public List<ProductView> findAll() {
         return productRepository.findAll().stream()
                 .map(entity -> {
-                    Hibernate.initialize(entity.getBuckets());
+                    Hibernate.initialize(entity.getBaskets());
                     Hibernate.initialize(entity.getCatalogs());
                     return mapper.map(entity, ProductView.class);
                 })
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public boolean allExist(List ids) {
+        return productRepository.existsAllByProductIdIn(ids);
+    }
+
 }

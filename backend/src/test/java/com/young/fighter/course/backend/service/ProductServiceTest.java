@@ -4,17 +4,18 @@ import com.young.fighter.course.backend.db.entity.Product;
 import com.young.fighter.course.backend.db.repository.ProductRepository;
 import com.young.fighter.course.backend.dto.ProductView;
 import com.young.fighter.course.backend.service.api.ProductService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import static com.young.fighter.course.backend.data.ProductData.getProductViews;
+import static com.young.fighter.course.backend.data.ProductData.getProducts;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -26,16 +27,8 @@ public class ProductServiceTest {
     private ProductService productService;
     @Autowired
     private ModelMapper modelMapper;
-    private List<ProductView> productViews = Arrays.asList(
-            new ProductView(null, 1034L, "Product1", "Description of first product"),
-            new ProductView(null, 1035L, "Product2", "Description of second product"),
-            new ProductView(null, 1036L, "Product3", "Description of third product")
-    );
-    private List<Product> productList = Arrays.asList(
-            new Product(null, 1034L, "Product1", "Description of first product", Collections.emptySet(), Collections.emptySet()),
-            new Product(null, 1035L, "Product2", "Description of second product", Collections.emptySet(), Collections.emptySet()),
-            new Product(null, 1036L, "Product3", "Description of third product", Collections.emptySet(), Collections.emptySet())
-    );
+    private List<ProductView> productViews = getProductViews();
+    private List<Product> productList = getProducts();
 
     @BeforeEach
     void before() {
@@ -98,5 +91,10 @@ public class ProductServiceTest {
             assertEquals(actualViews.get(i).getProductDesc(), productList.get(i).getProductDesc());
             assertEquals(actualViews.get(i).getPrice(), productList.get(i).getPrice());
         }
+    }
+
+    @AfterEach
+    void after() {
+        productRepository.deleteAll();
     }
 }
