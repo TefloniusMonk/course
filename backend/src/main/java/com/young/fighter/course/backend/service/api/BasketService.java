@@ -7,7 +7,7 @@ import com.young.fighter.course.backend.dto.BasketView;
 public interface BasketService {
     BasketView saveToBasket(BasketView view);
 
-    Basket clear(Basket basket);
+    Basket clear(Long basketId);
 
     BasketView findByCustomerId(Long id);
 

@@ -8,9 +8,9 @@ import java.util.List;
 public interface BillService {
     BillView sale(BasketView view);
 
-    void delete(Long id);
+//    void delete(Long id);
 
     BillView findById(Long id);
 
-    List<BillView> findAll();
+    List<BillView> findAll(Long customerId);
 }

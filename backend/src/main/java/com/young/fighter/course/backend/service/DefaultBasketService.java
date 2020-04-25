@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -72,14 +73,27 @@ public class DefaultBasketService implements BasketService {
     }
 
     @Override
-    public Basket clear(Basket basket) {
-        basket.setProducts(Collections.emptyList());
-        return basketRepository.save(basket);
+    public Basket clear(Long basketId) {
+        Optional<Basket> optionalBasket = basketRepository.findById(basketId);
+        if (optionalBasket.isPresent()) {
+            Basket basket = optionalBasket.get();
+            basket.setProducts(Collections.emptyList());
+            return basketRepository.save(basket);
+        } else {
+            log.error("Can not find basket with id: {}", basketId);
+            throw new BusinessLogicException("entity.not.exist");
+        }
     }
 
     @Override
     public BasketView findByCustomerId(Long id) {
-        return null;
+        Optional<Basket> basket = basketRepository.findByCustomerCustomerId(id);
+        if (basket.isPresent()) {
+            return mapper.map(basket.get(), BasketView.class);
+        } else {
+            log.error("Can not find basket with customerId: {}", id);
+            throw new BusinessLogicException("entity.not.exist");
+        }
     }
 
     @Override

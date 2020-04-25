@@ -4,7 +4,6 @@ import com.young.fighter.course.backend.db.entity.Product;
 import com.young.fighter.course.backend.db.repository.ProductRepository;
 import com.young.fighter.course.backend.dto.ProductView;
 import com.young.fighter.course.backend.service.api.ProductService;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
@@ -92,10 +91,5 @@ public class ProductServiceTest {
             assertEquals(actualViews.get(i).getProductDesc(), productList.get(i).getProductDesc());
             assertEquals(actualViews.get(i).getPrice(), productList.get(i).getPrice());
         }
-    }
-
-    @AfterEach
-    void after() {
-        productRepository.deleteAllInBatch();
     }
 }

@@ -29,6 +29,6 @@ public class Bill extends BusinessEntity {
 
     private LocalDateTime saleDateTime;
 
-    @Column(name = "total_cost")
-    private Long totalCost;
+    @Column(name = "total_sum")
+    private Long totalSum;
 }

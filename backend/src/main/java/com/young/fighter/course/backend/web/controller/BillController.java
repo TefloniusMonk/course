@@ -28,13 +28,13 @@ public class BillController {
 //        billService.delete(id);
 //    }
 
-    @GetMapping("/{id}")
-    public BillView findById(@PathVariable Long id) {
+    @GetMapping("/{customerId}/{id}")
+    public BillView findById(@PathVariable Long customerId, @PathVariable Long id) {
         return billService.findById(id);
     }
 
-    @GetMapping("/")
-    public List<BillView> findAll() {
-        return billService.findAll();
+    @GetMapping("/{customerId}/")
+    public List<BillView> findAll(@PathVariable Long customerId) {
+        return billService.findAll(customerId);
     }
 }

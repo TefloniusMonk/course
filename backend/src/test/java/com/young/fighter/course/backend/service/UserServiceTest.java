@@ -6,7 +6,6 @@ import com.young.fighter.course.backend.dto.UserView;
 import com.young.fighter.course.backend.exception.BusinessLogicException;
 import com.young.fighter.course.backend.service.api.UserService;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,10 +96,5 @@ public class UserServiceTest {
         userService.delete(userView.getUserId());
         List<User> users = userRepository.findAll();
         assertEquals(0, users.size());
-    }
-
-    @AfterEach
-    void after() {
-        userRepository.deleteAll();
     }
 }

@@ -42,16 +42,16 @@ public class DefaultBillService implements BillService {
         return null;
     }
 
-    @Override
-    public void delete(Long id) {
-        if (billRepository.findById(id).isPresent()) {
-            log.info("Deleting bill with id: {}", id);
-            billRepository.deleteById(id);
-        } else {
-            log.error("Can not delete product with id: {}", id);
-            throw new BusinessLogicException("entity.not.exist");
-        }
-    }
+//    @Override
+//    public void delete(Long id) {
+//        if (billRepository.findById(id).isPresent()) {
+//            log.info("Deleting bill with id: {}", id);
+//            billRepository.deleteById(id);
+//        } else {
+//            log.error("Can not delete product with id: {}", id);
+//            throw new BusinessLogicException("entity.not.exist");
+//        }
+//    }
 
     @Override
     public BillView findById(Long id) {
@@ -64,8 +64,8 @@ public class DefaultBillService implements BillService {
     }
 
     @Override
-    public List<BillView> findAll() {
-        return billRepository.findAll().stream()
+    public List<BillView> findAll(Long customerId) {
+        return billRepository.findAllByCustomerCustomerId(customerId).stream()
                 .map(entity -> mapper.map(entity, BillView.class))
                 .collect(Collectors.toList());
     }

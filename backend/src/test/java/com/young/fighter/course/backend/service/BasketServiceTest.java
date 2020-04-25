@@ -20,9 +20,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.young.fighter.course.backend.data.BasketData.getBasket;
 import static com.young.fighter.course.backend.data.BasketData.getBasketView;
 import static com.young.fighter.course.backend.data.CustomerData.getCustomer;
 import static com.young.fighter.course.backend.data.ProductData.getProducts;
@@ -72,6 +74,51 @@ public class BasketServiceTest {
         assertEquals(3, actual.getProducts().size());
     }
 
+    @Test
+    @Transactional
+    @Rollback(value = false)
+    void shouldUpdate() {
+        basketRepository.save(basket);
+        basketView.getProducts().add(modelMapper.map(
+                productRepository.save(
+                        new Product(null, 100L, "NewProductName",
+                                "NewProductDesc", Collections.emptyList(), Collections.emptyList())),
+                ProductView.class));
+        Long totalPrice = basketView.getProducts().stream().mapToLong(ProductView::getPrice).sum();
+        basketView.setTotalCost(totalPrice);
+        BasketView actual = basketService.saveToBasket(basketView);
+        List<Customer> actualCustomer = customerRepository.findAll();
+        assertEquals(1, actualCustomer.size());
+        Hibernate.initialize(actualCustomer.get(0).getBasket());
+        assertEquals(actual.getBasketId(), actualCustomer.get(0).getBasket().getBasketId());
+        assertEquals(4, actual.getProducts().size());
+    }
+
+
+    @Test
+    @Transactional
+    @Rollback(value = false)
+    void shouldClearBasket() {
+        basket = basketRepository.save(basket);
+        basketService.clear(basket.getBasketId());
+        Basket actual = basketRepository.findById(basket.getBasketId()).get();
+        Hibernate.initialize(actual.getProducts());
+        assertEquals(0, actual.getProducts().size());
+    }
+
+    @Test
+    @Transactional
+    @Rollback(value = false)
+    void shouldGetByCustomerId() {
+        basket = basketRepository.save(basket);
+        Hibernate.initialize(basket.getCustomer());
+        BasketView actual = basketService.findByCustomerId(basket.getCustomer().getCustomerId());
+        Hibernate.initialize(actual.getProducts());
+        assertEquals(basket.getCustomer().getCustomerId(), actual.getCustomerId());
+        assertEquals(basket.getBasketId(), actual.getBasketId());
+        assertEquals(basket.getTotalCost(), actual.getTotalCost());
+        assertEquals(3, actual.getProducts().size());
+    }
 
     private void prepareData() {
         customer = customerRepository.save(getCustomer(null, null));
@@ -82,6 +129,8 @@ public class BasketServiceTest {
         products = productRepository.saveAll(products);
         productViews = products.stream().map(product -> modelMapper.map(product, ProductView.class)).collect(Collectors.toList());
         basketView = getBasketView(customer.getCustomerId(), productViews);
+        basket = getBasket(customer, productViews.stream().map(productView -> modelMapper.map(productView, Product.class)).collect(Collectors.toList()));
+        basket.setProducts(products);
     }
 
 }
