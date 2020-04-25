@@ -13,5 +13,5 @@ public interface ProductService {
 
     List<ProductView> findAll();
 
-    boolean allExist(List ids);
+    boolean allExist(List<Long> ids);
 }

@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -25,6 +26,8 @@ public class Bill extends BusinessEntity {
 
     @OneToMany(targetEntity = Product.class)
     private List<Product> products;
+
+    private LocalDateTime saleDateTime;
 
     @Column(name = "total_cost")
     private Long totalCost;

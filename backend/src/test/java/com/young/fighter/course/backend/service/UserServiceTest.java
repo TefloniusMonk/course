@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 import static com.young.fighter.course.backend.data.UserData.getUserView;
+import static com.young.fighter.course.backend.util.DatabaseUtil.clearDb;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,7 +33,7 @@ public class UserServiceTest {
 
     @BeforeEach
     void before() {
-        userRepository.deleteAll();
+        clearDb();
     }
 
     @Test

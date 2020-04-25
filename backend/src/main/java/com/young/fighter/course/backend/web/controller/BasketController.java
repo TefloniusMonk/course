@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/bucket")
@@ -20,17 +19,16 @@ public class BasketController {
 
     @PostMapping("/")
     public BasketView save(@RequestBody @Valid BasketView view) {
-        return bucketService.saveToBucket(view);
+        return bucketService.saveToBasket(view);
     }
 
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable @NotNull Long id) {
-        bucketService.clear(id);
-    }
+//    @DeleteMapping("/{id}")
+//    public void delete(@PathVariable @NotNull Long id) {
+//        bucketService.clear(id);
+//    }
 
     @GetMapping("/{id}")
     public BasketView findById(@PathVariable Long id) {
         return bucketService.findByCustomerId(id);
     }
-
 }

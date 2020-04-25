@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(schema = "course", name = "busket")
+@Table(schema = "course", name = "basket")
 public class Basket extends BusinessEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

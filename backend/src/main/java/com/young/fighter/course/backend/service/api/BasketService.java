@@ -1,11 +1,15 @@
 package com.young.fighter.course.backend.service.api;
 
+import com.young.fighter.course.backend.db.entity.Basket;
+import com.young.fighter.course.backend.db.entity.Customer;
 import com.young.fighter.course.backend.dto.BasketView;
 
 public interface BasketService {
-    BasketView saveToBucket(BasketView view);
+    BasketView saveToBasket(BasketView view);
 
-    void clear(Long id);
+    Basket clear(Basket basket);
 
     BasketView findByCustomerId(Long id);
+
+    Basket createNewBasket(Customer customer);
 }

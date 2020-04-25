@@ -8,7 +8,6 @@ import com.young.fighter.course.backend.dto.CatalogView;
 import com.young.fighter.course.backend.dto.ProductView;
 import com.young.fighter.course.backend.service.api.CatalogService;
 import org.hibernate.Hibernate;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
@@ -23,6 +22,7 @@ import static com.young.fighter.course.backend.data.CatalogData.getCatalog;
 import static com.young.fighter.course.backend.data.CatalogData.getCatalogView;
 import static com.young.fighter.course.backend.data.ProductData.getProductViews;
 import static com.young.fighter.course.backend.data.ProductData.getProducts;
+import static com.young.fighter.course.backend.util.DatabaseUtil.clearDb;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -43,8 +43,7 @@ public class CatalogServiceTest {
 
     @BeforeEach
     void before() {
-        catalogRepository.deleteAll();
-        productRepository.deleteAll();
+        clearDb();
         products = productRepository.saveAll(products);
         products.forEach(product -> {
             Hibernate.initialize(product.getBaskets());
@@ -103,9 +102,4 @@ public class CatalogServiceTest {
         assertEquals(3, actual.size());
     }
 
-    @AfterEach
-    void after() {
-        catalogRepository.deleteAll();
-        productRepository.deleteAll();
-    }
 }

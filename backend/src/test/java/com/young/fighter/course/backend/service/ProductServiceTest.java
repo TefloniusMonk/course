@@ -16,6 +16,7 @@ import java.util.List;
 
 import static com.young.fighter.course.backend.data.ProductData.getProductViews;
 import static com.young.fighter.course.backend.data.ProductData.getProducts;
+import static com.young.fighter.course.backend.util.DatabaseUtil.clearDb;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -32,7 +33,7 @@ public class ProductServiceTest {
 
     @BeforeEach
     void before() {
-        productRepository.deleteAll();
+        clearDb();
     }
 
     @Test
@@ -95,6 +96,6 @@ public class ProductServiceTest {
 
     @AfterEach
     void after() {
-        productRepository.deleteAll();
+        productRepository.deleteAllInBatch();
     }
 }

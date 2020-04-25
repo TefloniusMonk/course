@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -40,7 +41,7 @@ public class DefaultCustomerService implements CustomerService {
             if (customerRepository.findById(view.getCustomerId()).isPresent()) {
                 if (!view.getUserId().equals(user.getUserId())) {
                     log.error("Do not try change user!");
-                    throw new BusinessLogicException("entity.not.exist");
+                    throw new BusinessLogicException("forbidden");
                 }
                 CustomerView customerView = mapper.map(customerRepository.save(
                         mapper.map(view, Customer.class)
@@ -61,13 +62,17 @@ public class DefaultCustomerService implements CustomerService {
     }
 
     @Override
+    public Customer save(Customer customer) {
+        return customerRepository.save(customer);
+    }
+
+    @Override
     @Transactional
     public void delete(Long id) {
         if (customerRepository.findById(id).isPresent()) {
             userService.deleteByCustomerId(id);
             log.info("Deleting customer with id: {}", id);
             log.info("Deleting user with customerId: {}", id);
-//            customerRepository.deleteById(id);
         } else {
             log.error("Can not delete customer with id: {}", id);
             throw new BusinessLogicException("entity.not.exist");
@@ -77,8 +82,9 @@ public class DefaultCustomerService implements CustomerService {
     @Override
     @Transactional
     public CustomerView findById(Long id) {
-        if (customerRepository.findById(id).isPresent()) {
-            Customer customer = customerRepository.findById(id).get();
+        Optional<Customer> optionalCustomer = customerRepository.findById(id);
+        if (optionalCustomer.isPresent()) {
+            Customer customer = optionalCustomer.get();
             Hibernate.initialize(customer.getBasket());
             if (customer.getBasket() != null) {
                 Hibernate.initialize(customer.getBasket().getProducts());
@@ -88,7 +94,6 @@ public class DefaultCustomerService implements CustomerService {
             log.error("Can not find customer with id: {}", id);
             throw new BusinessLogicException("entity.not.exist");
         }
-
     }
 
     @Override
@@ -96,5 +101,26 @@ public class DefaultCustomerService implements CustomerService {
         return customerRepository.findAll().stream()
                 .map(entity -> mapper.map(entity, CustomerView.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean exist(Long id) {
+        return customerRepository.existsById(id);
+    }
+
+    @Override
+    public Customer getById(Long id) {
+        Optional<Customer> optionalCustomer = customerRepository.findById(id);
+        if (optionalCustomer.isPresent()) {
+            Customer customer = optionalCustomer.get();
+            Hibernate.initialize(customer.getBasket());
+            if (customer.getBasket() != null) {
+                Hibernate.initialize(customer.getBasket().getProducts());
+            }
+            return customer;
+        } else {
+            log.error("Can not find customer with id: {}", id);
+            throw new BusinessLogicException("entity.not.exist");
+        }
     }
 }

@@ -1,6 +1,5 @@
 package com.young.fighter.course.backend.service;
 
-import com.young.fighter.course.backend.db.entity.Basket;
 import com.young.fighter.course.backend.db.entity.Customer;
 import com.young.fighter.course.backend.db.entity.User;
 import com.young.fighter.course.backend.db.repository.BasketRepository;
@@ -21,6 +20,7 @@ import java.time.LocalDate;
 import static com.young.fighter.course.backend.data.CustomerData.getCustomer;
 import static com.young.fighter.course.backend.data.CustomerData.getCustomerView;
 import static com.young.fighter.course.backend.data.UserData.getUser;
+import static com.young.fighter.course.backend.util.DatabaseUtil.clearDb;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -40,13 +40,10 @@ public class CustomerServiceTest {
     private User user;
     private Customer customer;
     private CustomerView customerView;
-    private Basket basket;
 
     @BeforeEach
-    @Transactional
     void before() {
-        userRepository.deleteAll();
-        customerRepository.deleteAll();
+        clearDb();
         user = userRepository.save(getUser());
         customerView = getCustomerView(null, user.getUserId());
         customer = getCustomer(null, null);

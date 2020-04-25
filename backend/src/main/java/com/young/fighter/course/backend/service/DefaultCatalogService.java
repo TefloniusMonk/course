@@ -35,7 +35,10 @@ public class DefaultCatalogService implements CatalogService {
     @Override
     @Transactional
     public CatalogView save(CatalogView view) {
-        if (!view.getProducts().isEmpty() && !productService.allExist(view.getProducts().stream().map(ProductView::getProductId).collect(Collectors.toList()))) {
+        if (!view.getProducts().isEmpty() &&
+                !productService.allExist(view.getProducts().stream()
+                        .map(ProductView::getProductId)
+                        .collect(Collectors.toList()))) {
             log.error("Products not found");
             throw new BusinessLogicException("entity.not.exist");
         }

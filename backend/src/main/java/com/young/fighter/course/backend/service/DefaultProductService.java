@@ -81,7 +81,7 @@ public class DefaultProductService implements ProductService {
     }
 
     @Override
-    public boolean allExist(List ids) {
+    public boolean allExist(List<Long> ids) {
         return productRepository.existsAllByProductIdIn(ids);
     }
 

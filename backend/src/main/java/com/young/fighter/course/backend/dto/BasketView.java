@@ -11,8 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BasketView implements Serializable {
-    private Long bucketId;
-    private CustomerView customer;
+    private Long basketId;
+    private Long customerId;
     private List<ProductView> products;
     private Long totalCost;
 }
