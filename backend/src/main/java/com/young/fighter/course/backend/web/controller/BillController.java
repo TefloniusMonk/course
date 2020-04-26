@@ -23,11 +23,6 @@ public class BillController {
         return billService.sale(view);
     }
 
-//    @DeleteMapping("/{id}")
-//    public void delete(@PathVariable Long id) {
-//        billService.delete(id);
-//    }
-
     @GetMapping("/{customerId}/{id}")
     public BillView findById(@PathVariable Long customerId, @PathVariable Long id) {
         return billService.findById(id);

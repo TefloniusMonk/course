@@ -19,7 +19,7 @@ public class Basket extends BusinessEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long basketId;
 
-    @OneToOne(fetch = FetchType.LAZY, targetEntity = Customer.class)
+    @OneToOne(fetch = FetchType.EAGER, targetEntity = Customer.class)
     private Customer customer;
 
     @ManyToMany(fetch = FetchType.LAZY)

@@ -32,9 +32,4 @@ public class CustomerController {
     public CustomerView findById(@PathVariable @NotNull Long id) {
         return customerService.findById(id);
     }
-
-//    @GetMapping("/")
-//    public List<CustomerView> findAll() {
-//        return customerService.findAll();
-//    }
 }

@@ -27,9 +27,4 @@ public class UserController {
     public void delete(@PathVariable @NotNull Long id) {
         userService.delete(id);
     }
-
-//    @GetMapping("/{id}")
-//    public String findById(@PathVariable Long id) {
-//        return userService.findById(id).toString();
-//    }
 }

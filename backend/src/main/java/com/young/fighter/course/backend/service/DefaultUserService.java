@@ -30,7 +30,7 @@ public class DefaultUserService implements UserService {
         if (view.getUserId() != null) {
             if (userRepository.findById(view.getUserId()).isPresent()
                     &&
-                    !userRepository.existsUserByLoginOrAndEmailAndAndUserIdNot(view.getLogin(), view.getEmail(), view.getUserId())) {
+                    !userRepository.existsUserByLoginOrEmailAndUserIdNot(view.getLogin(), view.getEmail(), view.getUserId())) {
                 UserView userView = mapper.map(userRepository.save(mapper.map(view, User.class)), UserView.class);
                 log.info("Creating new user with id: {}", userView.getUserId());
                 return userView;

@@ -14,4 +14,6 @@ public interface ProductService {
     List<ProductView> findAll();
 
     boolean allExist(List<Long> ids);
+
+    Long countSum(List<Long> ids);
 }

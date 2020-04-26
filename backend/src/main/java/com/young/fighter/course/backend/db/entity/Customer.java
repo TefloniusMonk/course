@@ -28,7 +28,7 @@ public class Customer extends BusinessEntity {
 
     private LocalDate birthDate;
 
-    @OneToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     private User user;
 
 

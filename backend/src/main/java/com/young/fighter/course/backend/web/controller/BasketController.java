@@ -22,10 +22,6 @@ public class BasketController {
         return bucketService.saveToBasket(view);
     }
 
-//    @DeleteMapping("/{id}")
-//    public void delete(@PathVariable @NotNull Long id) {
-//        bucketService.clear(id);
-//    }
 
     @GetMapping("/{id}")
     public BasketView findById(@PathVariable Long id) {

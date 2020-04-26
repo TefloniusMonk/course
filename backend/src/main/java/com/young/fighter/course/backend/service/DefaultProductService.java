@@ -85,4 +85,9 @@ public class DefaultProductService implements ProductService {
         return productRepository.existsAllByProductIdIn(ids);
     }
 
+    @Override
+    public Long countSum(List<Long> ids) {
+        return productRepository.countSum(ids);
+    }
+
 }
