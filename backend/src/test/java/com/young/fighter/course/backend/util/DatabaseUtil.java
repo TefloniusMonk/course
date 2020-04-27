@@ -10,12 +10,14 @@ public class DatabaseUtil {
     private static final String PASSWORD = "postgres";
     private static final String USER = "postgres";
     private static final String TRUNCATE =
-            "truncate table course.basket_products, " +
-                    "            course.bill, " +
-                    "            course.basket, course.customer, " +
-                    "            course.catalog_products, " +
-                    "            course.catalog, " +
-                    "             course.product cascade;";
+            "truncate table course.basket_products," +
+                    " course.bill_products," +
+                    " course.bill, " +
+                    " course.basket," +
+                    " course.customer, " +
+                    " course.catalog_products, " +
+                    " course.catalog, " +
+                    " course.product cascade;";
 
     public static void clearDb() {
         try {

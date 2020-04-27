@@ -16,8 +16,8 @@ create table course.basket
 );
 create table course.basket_products
 (
-    product_id int8 not null,
-    basket_id  int8 not null
+    basket_id  int8 not null,
+    product_id int8 not null
 );
 create table course.bill
 (
@@ -28,6 +28,11 @@ create table course.bill
     total_sum            int8,
     customer_customer_id int8,
     primary key (bill_id)
+);
+create table course.bill_products
+(
+    bill_bill_id        int8 not null,
+    products_product_id int8 not null
 );
 create table course.catalog
 (
@@ -64,11 +69,6 @@ create table course.product
     product_name varchar(255),
     primary key (product_id)
 );
-create table course.bill_products
-(
-    bill_bill_id        int8 not null,
-    products_product_id int8 not null
-);
 create table org.user
 (
     user_id              int8         not null,
@@ -80,17 +80,19 @@ create table org.user
     customer_customer_id int8,
     primary key (user_id)
 );
-create sequence if not exists hibernate_sequence start 1000 increment 1;
-
-
+create sequence hibernate_sequence start 1 increment 1;
 alter table if exists course.basket
     add foreign key (customer_customer_id) references course.customer;
 alter table if exists course.basket_products
-    add foreign key (basket_id) references course.basket;
-alter table if exists course.basket_products
     add foreign key (product_id) references course.product;
+alter table if exists course.basket_products
+    add foreign key (basket_id) references course.basket;
 alter table if exists course.bill
     add foreign key (customer_customer_id) references course.customer;
+alter table if exists course.bill_products
+    add foreign key (products_product_id) references course.product;
+alter table if exists course.bill_products
+    add foreign key (bill_bill_id) references course.bill;
 alter table if exists course.catalog_products
     add foreign key (product_id) references course.product;
 alter table if exists course.catalog_products
@@ -101,7 +103,3 @@ alter table if exists course.customer
     add foreign key (user_user_id) references org.user;
 alter table if exists org.user
     add foreign key (customer_customer_id) references course.customer;
-alter table if exists course.bill_products
-    add foreign key (products_product_id) references course.product;
-alter table if exists course.bill_products
-    add foreign key (bill_bill_id) references course.bill;

@@ -26,8 +26,8 @@ public class Basket extends BusinessEntity {
     @JoinTable(
             name = "basket_products",
             schema = "course",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "basket_id")
+            joinColumns = @JoinColumn(name = "basket_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private List<Product> products;
 
