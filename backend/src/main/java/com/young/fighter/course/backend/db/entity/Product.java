@@ -29,4 +29,7 @@ public class Product extends BusinessEntity {
 
     @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY)
     private List<Catalog> catalogs;
+
+    @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY)
+    private List<Bill> bills;
 }

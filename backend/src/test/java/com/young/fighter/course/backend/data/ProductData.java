@@ -18,9 +18,9 @@ public class ProductData {
 
     public static List<Product> getProducts() {
         return Arrays.asList(
-                new Product(null, 1034L, "Product1", "Description of first product", Collections.emptyList(), Collections.emptyList()),
-                new Product(null, 1035L, "Product2", "Description of second product", Collections.emptyList(), Collections.emptyList()),
-                new Product(null, 1036L, "Product3", "Description of third product", Collections.emptyList(), Collections.emptyList())
+                new Product(null, 1034L, "Product1", "Description of first product", Collections.emptyList(), Collections.emptyList(), Collections.emptyList()),
+                new Product(null, 1035L, "Product2", "Description of second product", Collections.emptyList(), Collections.emptyList(), Collections.emptyList()),
+                new Product(null, 1036L, "Product3", "Description of third product", Collections.emptyList(), Collections.emptyList(), Collections.emptyList())
         );
     }
 }

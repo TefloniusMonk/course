@@ -82,7 +82,7 @@ public class BasketServiceTest {
         basketView.getProducts().add(modelMapper.map(
                 productRepository.save(
                         new Product(null, 100L, "NewProductName",
-                                "NewProductDesc", Collections.emptyList(), Collections.emptyList())),
+                                "NewProductDesc", Collections.emptyList(), Collections.emptyList(), Collections.emptyList())),
                 ProductView.class));
         Long totalPrice = basketView.getProducts().stream().mapToLong(ProductView::getPrice).sum();
         basketView.setTotalCost(totalPrice);

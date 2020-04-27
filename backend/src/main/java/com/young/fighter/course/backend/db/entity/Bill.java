@@ -24,7 +24,13 @@ public class Bill extends BusinessEntity {
     @ManyToOne(targetEntity = Customer.class, fetch = FetchType.LAZY)
     private Customer customer;
 
-    @OneToMany(targetEntity = Product.class)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "bill_products",
+            schema = "course",
+            joinColumns = @JoinColumn(name = "bill_bill_id"),
+            inverseJoinColumns = @JoinColumn(name = "products_product_id")
+    )
     private List<Product> products;
 
     private LocalDateTime saleDateTime;
