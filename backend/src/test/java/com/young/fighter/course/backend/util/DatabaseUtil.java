@@ -12,6 +12,7 @@ public class DatabaseUtil {
     private static final String TRUNCATE =
             "truncate table course.basket_products," +
                     " course.bill_products," +
+                    " org.user," +
                     " course.bill, " +
                     " course.basket," +
                     " course.customer, " +

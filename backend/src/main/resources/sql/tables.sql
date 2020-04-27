@@ -1,10 +1,15 @@
 --liquibase formatted sql
 
---changeset User1:1
+--changeset User:1
+drop schema if exists org cascade;
+drop schema if exists course cascade;
+truncate table public.databasechangelog;
+drop sequence if exists hibernate_sequence;
 create schema if not exists org;
 create schema if not exists course;
 
---changeset User1:2
+
+--changeset User:2
 create table course.basket
 (
     basket_id            int8 not null,
@@ -103,3 +108,40 @@ alter table if exists course.customer
     add foreign key (user_user_id) references org.user;
 alter table if exists org.user
     add foreign key (customer_customer_id) references course.customer;
+
+--changeset User:4
+create table org.roles
+(
+    role_id   int8 not null primary key,
+    created   timestamp,
+    updated   timestamp,
+    role      varchar(255),
+    role_desc varchar(255)
+);
+create table org.authorities
+(
+    authority_id   int8 not null primary key,
+    created        timestamp,
+    updated        timestamp,
+    authority      varchar(255),
+    authority_desc varchar(255)
+);
+create table org.role_authorities
+(
+    role_id      int8 not null,
+    authority_id int8 not null
+);
+create table org.user_roles
+(
+    role_id int8 not null,
+    user_id int8 not null
+);
+
+alter table if exists org.role_authorities
+    add foreign key (role_id) references org.roles;
+alter table if exists org.role_authorities
+    add foreign key (authority_id) references org.authorities;
+alter table if exists org.user_roles
+    add foreign key (role_id) references org.roles;
+alter table if exists org.user_roles
+    add foreign key (user_id) references org.user;

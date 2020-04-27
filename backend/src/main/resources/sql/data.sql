@@ -1,6 +1,6 @@
 --liquibase formatted sql
 
---changeset User2:1
+--changeset User:1
 BEGIN TRANSACTION;
 insert into org."user"(user_id, created, updated, email, login, password, customer_customer_id)
 VALUES (1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'email@yandex.ru', 'admin',
@@ -91,3 +91,4 @@ VALUES (1, 5);
 insert into course.bill_products(bill_bill_id, products_product_id)
 VALUES (1, 6);
 END TRANSACTION;
+
