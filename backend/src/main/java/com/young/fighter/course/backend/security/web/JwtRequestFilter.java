@@ -53,10 +53,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             } catch (SignatureException exception) {
                 log.info("Wrong jwt signature");
             }
-        } else {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-            return;
         }
+//        else {
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+//            return;
+//        }
         if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             JwtUser jwtUser = jwtTokenUtil.validateToken(jwtToken);
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
