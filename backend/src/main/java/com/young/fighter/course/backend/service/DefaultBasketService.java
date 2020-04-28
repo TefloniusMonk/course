@@ -86,12 +86,12 @@ public class DefaultBasketService implements BasketService {
     }
 
     @Override
-    public BasketView findByCustomerId(Long id) {
-        Optional<Basket> basket = basketRepository.findByCustomerCustomerId(id);
+    public BasketView findByUserId(Long userId) {
+        Optional<Basket> basket = basketRepository.findByCustomerCustomerId(customerService.findByUserId(userId).getCustomerId());
         if (basket.isPresent()) {
             return mapper.map(basket.get(), BasketView.class);
         } else {
-            log.error("Can not find basket with customerId: {}", id);
+            log.error("Can not find basket with customerId: {}", userId);
             throw new BusinessLogicException("entity.not.exist");
         }
     }

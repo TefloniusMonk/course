@@ -86,9 +86,16 @@ VALUES (6, 1);
 
 insert into course.bill(bill_id, created, updated, sale_date_time, total_sum, customer_customer_id)
 VALUES (1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 3500, 1);
+
+insert into course.customer_bills(customer_id, bill_id)
+values (1, 1);
+
 insert into course.bill_products(bill_bill_id, products_product_id)
 VALUES (1, 5);
 insert into course.bill_products(bill_bill_id, products_product_id)
 VALUES (1, 6);
 END TRANSACTION;
 
+--changeset User:6
+insert into org.user_roles(role_id, user_id)
+VALUES (4, 1);

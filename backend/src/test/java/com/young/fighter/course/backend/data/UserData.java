@@ -9,6 +9,6 @@ public class UserData {
     }
 
     public static User getUser() {
-        return new User(null, "login", "password", "email", null);
+        return new User(null, "login", "password", "email", null, null);
     }
 }

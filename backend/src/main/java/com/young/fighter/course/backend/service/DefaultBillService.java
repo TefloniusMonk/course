@@ -12,6 +12,7 @@ import com.young.fighter.course.backend.service.api.BillService;
 import com.young.fighter.course.backend.service.api.CustomerService;
 import com.young.fighter.course.backend.service.api.ProductService;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,10 +64,17 @@ public class DefaultBillService implements BillService {
     }
 
     @Override
-    public BillView findById(Long id) {
+    @Transactional
+    public BillView findById(Long userId, Long id) {
         Optional<Bill> optionalBill = billRepository.findById(id);
         if (optionalBill.isPresent()) {
-            return mapper.map(optionalBill.get(), BillView.class);
+            Bill bill = optionalBill.get();
+            Hibernate.initialize(bill.getCustomer());
+            if (bill.getCustomer().getCustomerId().equals(customerService.findByUserId(userId).getCustomerId())) {
+                return mapper.map(bill, BillView.class);
+            } else {
+                throw new BusinessLogicException("forbidden");
+            }
         } else {
             log.error("Can not find bill with id: {}", id);
             throw new BusinessLogicException("entity.not.exist");
@@ -74,9 +82,14 @@ public class DefaultBillService implements BillService {
     }
 
     @Override
-    public List<BillView> findAll(Long customerId) {
-        return billRepository.findAllByCustomerCustomerId(customerId).stream()
+    public List<BillView> findAll(Long userId) {
+        return billRepository.findAllByCustomerCustomerId(customerService.findByUserId(userId).getCustomerId()).stream()
                 .map(entity -> mapper.map(entity, BillView.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteAllByCustomerId(Long customerId) {
+        billRepository.deleteAllByCustomerCustomerId(customerId);
     }
 }

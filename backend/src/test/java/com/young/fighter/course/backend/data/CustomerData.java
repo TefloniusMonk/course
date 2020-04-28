@@ -7,10 +7,11 @@ import com.young.fighter.course.backend.dto.BasketView;
 import com.young.fighter.course.backend.dto.CustomerView;
 
 import java.time.LocalDate;
+import java.util.Collections;
 
 public class CustomerData {
     public static Customer getCustomer(Basket basket, User user) {
-        return new Customer(null, basket, "email", "Full Name", LocalDate.now().minusYears(40), user);
+        return new Customer(null, basket, "email", "Full Name", LocalDate.now().minusYears(40), user, Collections.emptyList());
     }
 
     public static CustomerView getCustomerView(BasketView basketView, Long userId) {

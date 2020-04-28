@@ -81,8 +81,8 @@ public class DefaultCustomerService implements CustomerService {
 
     @Override
     @Transactional
-    public CustomerView findById(Long id) {
-        Optional<Customer> optionalCustomer = customerRepository.findById(id);
+    public CustomerView findByUserId(Long userId) {
+        Optional<Customer> optionalCustomer = customerRepository.findByUserUserId(userId);
         if (optionalCustomer.isPresent()) {
             Customer customer = optionalCustomer.get();
             Hibernate.initialize(customer.getBasket());
@@ -91,7 +91,7 @@ public class DefaultCustomerService implements CustomerService {
             }
             return mapper.map(customer, CustomerView.class);
         } else {
-            log.error("Can not find customer with id: {}", id);
+            log.error("Can not find customer with userId: {}", userId);
             throw new BusinessLogicException("entity.not.exist");
         }
     }

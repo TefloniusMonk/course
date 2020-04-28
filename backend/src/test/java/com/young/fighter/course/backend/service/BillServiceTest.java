@@ -74,10 +74,9 @@ public class BillServiceTest {
     }
 
     @Test
-    @Transactional
-    @Rollback(value = false)
     void shouldGetById() {
-        BillView billView = billService.findById(billService.sale(modelMapper.map(basket, BasketView.class)).getBillId());
+        BillView saved = billService.sale(modelMapper.map(basket, BasketView.class));
+        BillView billView = billService.findById(user.getUserId(), saved.getBillId());
         assertNotNull(billView);
         assertNotNull(billView.getBillId());
         assertEquals(customer.getCustomerId(), billView.getCustomerId());
@@ -91,17 +90,17 @@ public class BillServiceTest {
         billRepository.save(new Bill(null, customer, Collections.emptyList(), LocalDateTime.now(), 0L));
         billRepository.save(new Bill(null, customer, Collections.emptyList(), LocalDateTime.now(), 0L));
         billRepository.save(new Bill(null, customer, Collections.emptyList(), LocalDateTime.now(), 0L));
-        List<BillView> billView = billService.findAll(billService.sale(modelMapper.map(basket, BasketView.class)).getCustomerId());
-        assertEquals(4, billView.size());
+        List<BillView> billView = billService.findAll(user.getUserId());
+        assertEquals(3, billView.size());
     }
 
     private void prepareData() {
         user = userRepository.save(getUser());
-        customer = customerRepository.save(getCustomer(null, null));
+        customer = customerRepository.save(getCustomer(null, user));
         user.setCustomer(customer);
         customer.setUser(user);
         userRepository.save(user);
-        customerRepository.save(customer);
+        customer = customerRepository.save(customer);
         products = getProducts();
         products = productRepository.saveAll(products);
         basket = getBasket(customer, products);

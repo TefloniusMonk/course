@@ -3,5 +3,8 @@ databaseChangeLog:
       file: sql/tables.sql
       relativeToChangelogFile: true
   - include:
+      file: sql/org.sql
+      relativeToChangelogFile: true
+  - include:
       file: sql/data.sql
       relativeToChangelogFile: true

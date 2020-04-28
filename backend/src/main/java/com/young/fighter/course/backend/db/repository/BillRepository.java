@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface BillRepository extends JpaRepository<Bill, Long> {
     List<Bill> findAllByCustomerCustomerId(Long customerId);
+
+    void deleteAllByCustomerCustomerId(Long customerId);
 }

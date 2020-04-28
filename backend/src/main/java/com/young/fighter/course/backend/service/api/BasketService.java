@@ -9,7 +9,7 @@ public interface BasketService {
 
     Basket clear(Long basketId);
 
-    BasketView findByCustomerId(Long id);
+    BasketView findByUserId(Long id);
 
     Basket createNewBasket(Customer customer);
 }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -19,7 +20,7 @@ public class Customer extends BusinessEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long customerId;
 
-    @OneToOne(fetch = FetchType.LAZY, targetEntity = Basket.class)
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = Basket.class, cascade = CascadeType.ALL)
     private Basket basket;
 
     private String email;
@@ -31,5 +32,12 @@ public class Customer extends BusinessEntity {
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     private User user;
 
-
+    @OneToMany(targetEntity = Bill.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinTable(
+            name = "customer_bills",
+            schema = "course",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "bill_id")
+    )
+    private List<Bill> bills;
 }

@@ -12,7 +12,7 @@ public interface CustomerService {
 
     void delete(Long id);
 
-    CustomerView findById(Long id);
+    CustomerView findByUserId(Long id);
 
     List<CustomerView> findAll();
 

@@ -10,7 +10,9 @@ public interface BillService {
 
 //    void delete(Long id);
 
-    BillView findById(Long id);
+    BillView findById(Long userId, Long id);
 
-    List<BillView> findAll(Long customerId);
+    List<BillView> findAll(Long userId);
+
+    void deleteAllByCustomerId(Long customerId);
 }

@@ -64,6 +64,11 @@ create table course.customer
     user_user_id     int8,
     primary key (customer_id)
 );
+create table course.customer_bills
+(
+    customer_id int8 not null,
+    bill_id     int8 not null
+);
 create table course.product
 (
     product_id   int8 not null,
@@ -85,44 +90,52 @@ create table org.user
     customer_customer_id int8,
     primary key (user_id)
 );
+
 create sequence hibernate_sequence start 1 increment 1;
 alter table if exists course.basket
     add foreign key (customer_customer_id) references course.customer;
+
 alter table if exists course.basket_products
     add foreign key (product_id) references course.product;
 alter table if exists course.basket_products
     add foreign key (basket_id) references course.basket;
+
+alter table if exists course.customer_bills
+    add foreign key (customer_id) references course.customer;
+alter table if exists course.customer_bills
+    add foreign key (bill_id) references course.bill;
 alter table if exists course.bill
     add foreign key (customer_customer_id) references course.customer;
+
 alter table if exists course.bill_products
     add foreign key (products_product_id) references course.product;
 alter table if exists course.bill_products
     add foreign key (bill_bill_id) references course.bill;
+
 alter table if exists course.catalog_products
     add foreign key (product_id) references course.product;
 alter table if exists course.catalog_products
     add foreign key (catalog_id) references course.catalog;
+
 alter table if exists course.customer
     add foreign key (basket_basket_id) references course.basket;
 alter table if exists course.customer
     add foreign key (user_user_id) references org.user;
+
 alter table if exists org.user
     add foreign key (customer_customer_id) references course.customer;
 
 --changeset User:4
 create table org.roles
 (
-    role_id   int8 not null primary key,
-    created   timestamp,
-    updated   timestamp,
+    role_id   int8 not null,
     role      varchar(255),
-    role_desc varchar(255)
+    role_desc varchar(255),
+    primary key (role_id)
 );
 create table org.authorities
 (
     authority_id   int8 not null primary key,
-    created        timestamp,
-    updated        timestamp,
     authority      varchar(255),
     authority_desc varchar(255)
 );

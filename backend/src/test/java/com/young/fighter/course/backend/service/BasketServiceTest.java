@@ -112,7 +112,8 @@ public class BasketServiceTest {
     void shouldGetByCustomerId() {
         basket = basketRepository.save(basket);
         Hibernate.initialize(basket.getCustomer());
-        BasketView actual = basketService.findByCustomerId(basket.getCustomer().getCustomerId());
+        Hibernate.initialize(basket.getCustomer().getUser());
+        BasketView actual = basketService.findByUserId(basket.getCustomer().getUser().getUserId());
         Hibernate.initialize(actual.getProducts());
         assertEquals(basket.getCustomer().getCustomerId(), actual.getCustomerId());
         assertEquals(basket.getBasketId(), actual.getBasketId());

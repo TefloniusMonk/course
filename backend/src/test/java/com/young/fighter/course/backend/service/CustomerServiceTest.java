@@ -88,9 +88,11 @@ public class CustomerServiceTest {
     }
 
     @Test
+    @Transactional
     void shouldGet() {
         bindAndSave();
-        CustomerView actual = customerService.findById(customer.getCustomerId());
+        Hibernate.initialize(customer.getUser());
+        CustomerView actual = customerService.findByUserId(customer.getUser().getUserId());
         assertEquals("email", actual.getEmail());
         assertEquals("Full Name", actual.getFullName());
     }

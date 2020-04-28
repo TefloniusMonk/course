@@ -28,4 +28,13 @@ public class User extends BusinessEntity {
 
     @OneToOne(targetEntity = Customer.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Customer customer;
+
+    @ManyToOne(targetEntity = Role.class, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_roles",
+            schema = "org",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Role role;
 }

@@ -1,3 +1,4 @@
 entity.not.exist="Сообщение ошибки"
 user.in.use="Пользователь существует"
 forbidden="Ошибка доступа"
+token.expired="Токен просрочен"
