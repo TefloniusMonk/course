@@ -3,10 +3,15 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify';
+import axios from 'axios';
+import AxiosInterceptor from '@/plugins/axios-interceptor'
 
 Vue.config.productionTip = false
 
-Vue.prototype.$hostname = 'http://localhost:8100/';
+axios.defaults.baseURL = 'http://localhost:8100/';
+axios.defaults.withCredentials = true;
+
+AxiosInterceptor();
 
 new Vue({
   router,

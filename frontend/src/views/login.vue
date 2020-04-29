@@ -16,7 +16,7 @@
                     >
                         <v-card class="elevation-12">
                             <v-toolbar
-                                    color="primary"
+                                    color="indigo"
                                     dark
                                     flat
                             >
@@ -29,22 +29,31 @@
                                             label="Логин"
                                             name="Логин"
                                             placeholder="Enter 'admin'"
-                                            prepend-icon="person"
+                                            prepend-icon="mdi-login"
                                             type="text"
+                                            v-model="login"
                                     />
                                     <v-text-field
                                             id="password"
                                             label="Пароль"
                                             name="Пароль"
                                             placeholder="Enter 'password'"
-                                            prepend-icon="lock"
+                                            prepend-icon="mdi-lock"
                                             type="password"
+                                            v-model="password"
+                                            v-on:keypress.enter="sendForm"
                                     />
                                 </v-form>
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer/>
-                                <v-btn color="primary">Login</v-btn>
+                                <v-btn color="indigo"
+                                       dark
+                                       @click="sendForm"
+                                       v-on:keypress.enter="sendForm"
+                                >
+                                    Войти
+                                </v-btn>
                             </v-card-actions>
                         </v-card>
                     </v-col>
@@ -55,16 +64,44 @@
 </template>
 
 <script>
+    import axios from 'axios'
+    import router from "@/router";
+
     export default {
         name: "login",
         props: {
             source: String,
+        },
+        watch: {},
+        data() {
+            return {
+                login: null,
+                password: null,
+            }
+        },
+        methods: {
+            sendForm() {
+                return axios.post('user/auth',
+                    `{"login": "${this.login}", "password":"${this.password}"}`)
+                    .then(response => {
+                        if (response.status === 200) {
+                            localStorage.setItem("TOKEN", response.data)
+                            router.push("profile")
+                        }
+                    })
+            },
+            get() {
+                return axios.get("/product/")
+            }
+        },
+        mounted() {
+            this.get()
         }
     }
 </script>
 
 <style scoped>
-    #app {
+    #login {
         height: 100%;
     }
 </style>

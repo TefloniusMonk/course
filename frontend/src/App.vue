@@ -13,7 +13,9 @@
     }
 </script>
 
-<style>
+<style lang="scss">
+    @import "assets/scss/global.scss";
+
     body {
         margin: 0 auto !important;
     }

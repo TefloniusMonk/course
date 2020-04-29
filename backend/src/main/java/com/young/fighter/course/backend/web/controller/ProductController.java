@@ -39,7 +39,7 @@ public class ProductController {
     }
 
     @GetMapping("/")
-    @PreAuthorize("hasAuthority('PRODUCT_VIEW')")
+//    @PreAuthorize("hasAuthority('PRODUCT_VIEW')")
     public List<ProductView> findAll() {
         return productService.findAll();
     }
