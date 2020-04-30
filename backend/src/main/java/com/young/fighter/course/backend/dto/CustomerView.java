@@ -15,6 +15,6 @@ public class CustomerView implements Serializable {
     private String email;
     private String fullName;
     private LocalDate birthDate;
-    private BasketView basket;
+    private Long basketId;
     private Long userId;
 }

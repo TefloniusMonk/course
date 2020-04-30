@@ -21,28 +21,40 @@
                                     <v-text-field
                                             label="Логин"
                                             name="Логин"
-                                            placeholder="Enter 'admin'"
+                                            placeholder="Введите логин"
                                             prepend-icon="mdi-login"
                                             type="text"
                                             v-model="login"/>
                                     <v-text-field
+                                            id="email"
+                                            label="Email"
+                                            name="Email"
+                                            placeholder="Введите email"
+                                            prepend-icon="mdi-email"
+                                            v-model="email"
+                                    />
+                                    <v-text-field
                                             id="password"
                                             label="Пароль"
                                             name="Пароль"
-                                            placeholder="Enter 'password'"
+                                            placeholder="Введите ваш пароль"
                                             prepend-icon="mdi-lock"
                                             type="password"
                                             v-model="password"
-                                            v-on:keypress.enter="sendForm"/>
+                                    />
+                                    <v-text-field
+                                            id="password-repeat"
+                                            label="Повторите Пароль"
+                                            name="Пароль"
+                                            placeholder="Повторите Пароль"
+                                            prepend-icon="mdi-lock"
+                                            type="password"
+                                            v-model="passRepeat"
+                                            :rules="rules.equals"
+                                    />
                                 </v-form>
                             </v-card-text>
                             <v-card-actions>
-                                <v-btn color="indigo"
-                                       dark
-                                       text
-                                       @click="goToSignUp">
-                                    Зарегистрироваться
-                                </v-btn>
                                 <v-spacer/>
                                 <v-btn color="indigo"
                                        dark
@@ -59,11 +71,11 @@
 </template>
 
 <script>
-    import axios from 'axios'
+    import axios from "axios";
     import router from "@/router";
 
     export default {
-        name: "login",
+        name: "sign-up",
         props: {
             source: String,
         },
@@ -72,30 +84,31 @@
             return {
                 login: null,
                 password: null,
+                email: null,
+                passRepeat: null,
+                rules: {
+                    equals: [repeat => !!repeat || "Пароли не совпадают"]
+                }
             }
         },
         methods: {
             sendForm() {
-                return axios.post('user/auth',
-                    `{"login": "${this.login}", "password":"${this.password}"}`)
+                return axios.post('user/sign-up',
+                    `{
+                    "userId": null,
+                    "password": "${this.password}",
+                    "login": "${this.login}",
+                    "email": "${this.email}"}`)
                     .then(response => {
-                        if (response.status === 200 && response.data !== null && response.data !== "") {
-                            localStorage.setItem("TOKEN", response.data)
-                            router.push("profile")
+                        if (response.status === 200) {
+                            router.push("login")
                         }
                     })
             },
-            goToSignUp() {
-                router.push("sign-up")
-            }
-        },
-        mounted() {
         }
     }
 </script>
 
 <style scoped>
-    #login {
-        height: 100%;
-    }
+
 </style>

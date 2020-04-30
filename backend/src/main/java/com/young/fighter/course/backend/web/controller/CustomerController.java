@@ -24,7 +24,7 @@ public class CustomerController {
     @PostMapping("/")
     @PreAuthorize("hasAuthority('PROFILE_WRITE')")
     public CustomerView save(@RequestBody @Valid CustomerView view) {
-        return customerService.save(view);
+        return customerService.save(view, userHolderService.getUserFromContext().getUserId());
     }
 
 

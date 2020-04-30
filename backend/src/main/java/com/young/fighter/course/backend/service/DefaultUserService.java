@@ -121,7 +121,7 @@ public class DefaultUserService implements UserService {
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             Hibernate.initialize(user.getCustomer());
-            return jwtTokenUtil.generateToken(new JwtUser(user.getCustomer().getCustomerId(), user.getUserId(), userRepository.getAuthorities(user.getUserId())));
+            return jwtTokenUtil.generateToken(new JwtUser(user.getCustomer() == null ? null : user.getCustomer().getCustomerId(), user.getUserId(), userRepository.getAuthorities(user.getUserId())));
         }
         log.error("Wrong authorization try");
         throw new BusinessLogicException("forbidden");

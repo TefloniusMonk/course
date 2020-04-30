@@ -6,7 +6,7 @@ import Basket from '@/views/basket/basket.vue'
 import Bills from '@/views/bill/bill-list.vue'
 import Catalog from '@/views/catalog/catalog.vue'
 import Login from '@/views/login.vue'
-
+import SignUp from '@/views/sign-up.vue'
 
 Vue.use(VueRouter)
 
@@ -18,6 +18,11 @@ const routes = [
         component: Login,
     },
     {
+        path: '/sign-up',
+        name: 'sign-up',
+        component: SignUp,
+    },
+    {
         path: '/',
         name: 'main',
         component: Main,
@@ -26,13 +31,11 @@ const routes = [
                 path: '/profile',
                 name: 'profile',
                 component: Profile,
-                children: [
-                    {
-                        path: '/bills',
-                        name: 'bill-list',
-                        component: Bills,
-                    }
-                ]
+            },
+            {
+                path: '/bills',
+                name: 'bill-list',
+                component: Bills,
             },
             {
                 path: '/catalog',

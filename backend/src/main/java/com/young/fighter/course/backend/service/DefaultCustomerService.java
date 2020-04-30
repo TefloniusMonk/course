@@ -35,8 +35,8 @@ public class DefaultCustomerService implements CustomerService {
 
     @Override
     @Transactional
-    public CustomerView save(CustomerView view) {
-        User user = userService.findById(view.getUserId());
+    public CustomerView save(CustomerView view, Long userId) {
+        User user = userService.findById(userId);
         if (view.getCustomerId() != null) {
             if (customerRepository.findById(view.getCustomerId()).isPresent()) {
                 if (!view.getUserId().equals(user.getUserId())) {
@@ -54,7 +54,10 @@ public class DefaultCustomerService implements CustomerService {
                 throw new BusinessLogicException("entity.not.exist");
             }
         }
-        Customer customer = customerRepository.save(mapper.map(view, Customer.class));
+
+        Customer customer = mapper.map(view, Customer.class);
+        customer.setUser(user);
+        customerRepository.save(customer);
         log.info("Creating customer: {}", customer.toString());
         user.setCustomer(customer);
         userService.save(user);

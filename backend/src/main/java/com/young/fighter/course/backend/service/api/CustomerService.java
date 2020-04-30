@@ -6,7 +6,7 @@ import com.young.fighter.course.backend.dto.CustomerView;
 import java.util.List;
 
 public interface CustomerService {
-    CustomerView save(CustomerView view);
+    CustomerView save(CustomerView view, Long userId);
 
     Customer save(Customer customer);
 

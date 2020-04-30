@@ -20,7 +20,7 @@ public class Customer extends BusinessEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long customerId;
 
-    @OneToOne(fetch = FetchType.LAZY, targetEntity = Basket.class, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = Basket.class)
     private Basket basket;
 
     private String email;
@@ -32,7 +32,7 @@ public class Customer extends BusinessEntity {
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     private User user;
 
-    @OneToMany(targetEntity = Bill.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(targetEntity = Bill.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             name = "customer_bills",
             schema = "course",

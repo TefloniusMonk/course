@@ -52,7 +52,7 @@ public class CustomerServiceTest {
     @Test
     @Transactional
     void shouldSave() {
-        CustomerView saved = customerService.save(customerView);
+        CustomerView saved = customerService.save(customerView, user.getUserId());
         User actualUser = getUserFromDb(saved);
         assertNotNull(actualUser.getCustomer().getCustomerId());
         assertNotNull(saved.getCustomerId());
@@ -65,11 +65,11 @@ public class CustomerServiceTest {
     @Test
     @Transactional
     void shouldUpdate() {
-        customerService.save(customerView);
+        customerService.save(customerView, user.getUserId());
         customerView.setBirthDate(LocalDate.now());
         customerView.setEmail("newEmail");
         customerView.setFullName("newName");
-        CustomerView saved = customerService.save(customerView);
+        CustomerView saved = customerService.save(customerView, user.getUserId());
         User actualUser = getUserFromDb(saved);
         assertNotNull(actualUser.getCustomer().getCustomerId());
         assertNotNull(saved.getCustomerId());
