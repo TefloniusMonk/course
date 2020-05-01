@@ -78,6 +78,7 @@ public class DefaultBasketService implements BasketService {
         if (optionalBasket.isPresent()) {
             Basket basket = optionalBasket.get();
             basket.setProducts(Collections.emptyList());
+            basket.setTotalCost(0L);
             return basketRepository.save(basket);
         } else {
             log.error("Can not find basket with id: {}", basketId);

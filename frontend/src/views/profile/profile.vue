@@ -66,8 +66,6 @@
                 </v-col>
             </v-row>
         </v-card>
-
-
     </v-content>
 </template>
 

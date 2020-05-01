@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/bucket")
+@RequestMapping("/basket")
 public class BasketController {
     private BasketService bucketService;
     private final UserHolderService userHolderService;
