@@ -4,32 +4,24 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-import javax.persistence.*;
-import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(schema = "course", name = "basket")
+@Table(value = "course.basket")
 public class Basket extends BusinessEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column("basket_id")
     private Long basketId;
 
-    @OneToOne(fetch = FetchType.EAGER, targetEntity = Customer.class)
-    private Customer customer;
+    @Column("customer_id")
+    private Long customerId;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "basket_products",
-            schema = "course",
-            joinColumns = @JoinColumn(name = "basket_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private List<Product> products;
-
+    @Column("total_cost")
     private Long totalCost;
 }

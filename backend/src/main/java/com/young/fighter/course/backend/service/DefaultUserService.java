@@ -10,16 +10,11 @@ import com.young.fighter.course.backend.security.util.JwtTokenUtil;
 import com.young.fighter.course.backend.service.api.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Mono;
 
-import javax.transaction.Transactional;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
 
 @Slf4j
 @Service
@@ -36,23 +31,25 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public UserView save(UserView view) {
+    public Mono<UserView> save(UserView view) {
         view.setPassword(DigestUtils.sha256Hex(view.getPassword() + salt));
         if (view.getUserId() != null) {
-            if (userRepository.findById(view.getUserId()).isPresent()
-                    &&
-                    !userRepository.existsUserByLoginOrEmailAndUserIdNot(view.getLogin(), view.getEmail(), view.getUserId())) {
-                UserView userView = mapper.map(userRepository.save(mapper.map(view, User.class)), UserView.class);
-                log.info("Creating new user with id: {}", userView.getUserId());
-                return userView;
-            } else {
-                log.error("Cannot find user with id: {}", view.getUserId());
-                throw new BusinessLogicException("entity.not.exist");
+            if (!userRepository.existsUserByLoginOrEmailAndUserIdNot(view.getLogin(), view.getEmail(), view.getUserId())) {
+                log.error("Can not create user with email: {} and login {}. They are in use", view.getEmail(), view.getLogin());
+                throw new BusinessLogicException("user.in.use");
             }
+            return userRepository.findById(view.getUserId())
+                    .map(user -> {
+                        log.info("Creating new user with id: {}", user.getUserId());
+                        return mapper.map(user, UserView.class);
+                    });
         }
         if (!userRepository.existsUserByLoginOrEmail(view.getLogin(), view.getEmail())) {
-            log.info("Updating user with id: {}", view.getUserId());
-            return mapper.map(userRepository.save(mapper.map(view, User.class)), UserView.class);
+            return userRepository.save(mapper.map(view, User.class))
+                    .map(user -> {
+                        log.info("Updating user with id: {}", view.getUserId());
+                        return mapper.map(user, UserView.class);
+                    });
         } else {
             log.error("Can not create user with email: {} and login {}. They are in use", view.getEmail(), view.getLogin());
             throw new BusinessLogicException("user.in.use");
@@ -60,30 +57,25 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public User save(User entity) {
+    public Mono<User> save(User entity) {
         log.info("Updating user: {}", entity.getUserId());
         return userRepository.save(entity);
     }
 
     @Override
     @Transactional
-    public void delete(Long id) {
-        Optional<User> optionalUser = userRepository.findById(id);
-        if (optionalUser.isPresent()) {
-            User userEntity = optionalUser.get();
-            Hibernate.initialize(userEntity);
-            log.info("Deleting user with id: {}", id);
-            userRepository.deleteById(id);
-        } else {
-            log.error("Can not delete user with id: {}", id);
-            throw new BusinessLogicException("entity.not.exist");
-        }
+    public Mono<Void> delete(Long id) {
+        return userRepository.deleteById(id)
+                .doOnError(error -> {
+                    log.error("Can not delete user with id: {}", id);
+                    throw new BusinessLogicException("entity.not.exist");
+                });
     }
 
     @Override
-    public void deleteByCustomerId(Long customerId) {
+    public Mono<Void> deleteByCustomerId(Long customerId) {
         if (userRepository.existsUserByCustomerCustomerId(customerId)) {
-            userRepository.deleteByCustomerCustomerId(customerId);
+            return userRepository.deleteByCustomerCustomerId(customerId);
         } else {
             log.error("Can not delete user with customerId: {}", customerId);
             throw new BusinessLogicException("entity.not.exist");
@@ -92,38 +84,41 @@ public class DefaultUserService implements UserService {
 
 
     @Override
-    public boolean existUser(Long id) {
+    public Mono<Boolean> existUser(Long id) {
         return userRepository.existsById(id);
     }
 
     @Override
-    public User findById(Long id) {
-        Optional<User> userOptional = userRepository.findById(id);
-        if (userOptional.isPresent()) {
-            return userOptional.get();
-        } else {
-            log.error("User with id {} doesn't exist", id);
-            throw new BusinessLogicException("entity.not.exist");
-        }
+    public Mono<User> findById(Long id) {
+        return userRepository.findById(id)
+                .switchIfEmpty(Mono.defer(() -> {
+                            log.error("User with id {} doesn't exist", id);
+                            throw new BusinessLogicException("entity.not.exist");
+                        }
+                        )
+                );
+
     }
 
-    @Override
-    public Set<GrantedAuthority> getUserAuthorities(Long userId) {
-        HashSet<GrantedAuthority> authorities = new HashSet<>();
-        userRepository.getAuthorities(userId).forEach(authority -> authorities.add(new SimpleGrantedAuthority(authority)));
-        return authorities;
-    }
+//    @Override
+//    public Set<GrantedAuthority> getUserAuthorities(Long userId) {
+//        HashSet<GrantedAuthority> authorities = new HashSet<>();
+//        userRepository.getAuthorities(userId).forEach(authority -> authorities.add(new SimpleGrantedAuthority(authority)));
+//        return authorities;
+//    }
 
     @Override
     @Transactional
-    public String auth(JwtRequest request) {
-        Optional<User> optionalUser = userRepository.findUserByLoginAndPassword(request.getLogin(), (DigestUtils.sha256Hex(request.getPassword() + salt)));
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            Hibernate.initialize(user.getCustomer());
-            return jwtTokenUtil.generateToken(new JwtUser(user.getCustomer() == null ? null : user.getCustomer().getCustomerId(), user.getUserId(), userRepository.getAuthorities(user.getUserId())));
-        }
-        log.error("Wrong authorization try");
-        throw new BusinessLogicException("forbidden");
+    public Mono<String> auth(JwtRequest request) {
+        return userRepository.findUserByLoginAndPassword(request.getLogin(), (DigestUtils.sha256Hex(request.getPassword() + salt)))
+                .zipWhen(user -> {
+                    return userRepository.getAuthorities(user.getUserId()).collectList();
+                })
+                .map(pair -> { // user, authorities
+                    return jwtTokenUtil.generateToken(
+                            new JwtUser(pair.getT1().getCustomerId(),
+                                    pair.getT1().getUserId(),
+                                    pair.getT2()));
+                });
     }
 }

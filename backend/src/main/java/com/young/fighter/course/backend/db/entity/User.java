@@ -4,37 +4,29 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(schema = "org", name = "user")
+@Table("org.user")
 public class User extends BusinessEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column("user_id")
     private Long userId;
 
-    @Column(name = "login", nullable = false, unique = true)
+    @Column("login")
     private String login;
 
+    @Column("password")
     private String password;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column("email")
     private String email;
 
-    @OneToOne(targetEntity = Customer.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Customer customer;
-
-    @ManyToOne(targetEntity = Role.class, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_roles",
-            schema = "org",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Role role;
+    @Column("customer_id")
+    private Long customerId;
 }

@@ -10,13 +10,13 @@ public interface CustomerService {
 
     Mono<Customer> save(Customer customer);
 
-    void delete(Long id);
+    Mono<Void> delete(Long id);
 
     Mono<CustomerView> findByUserId(Long id);
 
     Flux<CustomerView> findAll();
 
-    boolean exist(Long id);
+    Mono<Boolean> exist(Long id);
 
     Mono<Customer> getById(Long id);
 }

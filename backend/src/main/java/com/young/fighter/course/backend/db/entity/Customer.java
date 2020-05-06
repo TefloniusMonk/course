@@ -4,40 +4,34 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(schema = "course", name = "customer")
+@Table("course.customer")
 public class Customer extends BusinessEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column("customer_id")
     private Long customerId;
 
-    @OneToOne(fetch = FetchType.LAZY, targetEntity = Basket.class)
-    private Basket basket;
+    @Column("basket_id")
+    private Long basketId;
 
+    @Column("email")
     private String email;
 
+    @Column("full_name")
     private String fullName;
 
+    @Column("birth_date")
     private LocalDate birthDate;
 
-    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
-    private User user;
-
-    @OneToMany(targetEntity = Bill.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "customer_bills",
-            schema = "course",
-            joinColumns = @JoinColumn(name = "customer_id"),
-            inverseJoinColumns = @JoinColumn(name = "bill_id")
-    )
-    private List<Bill> bills;
+    @Column("user_id")
+    private Long userId;
 }

@@ -2,23 +2,21 @@ package com.young.fighter.course.backend.service;
 
 import com.young.fighter.course.backend.db.entity.Basket;
 import com.young.fighter.course.backend.db.entity.Customer;
-import com.young.fighter.course.backend.db.entity.Product;
 import com.young.fighter.course.backend.db.repository.BasketRepository;
 import com.young.fighter.course.backend.dto.BasketView;
+import com.young.fighter.course.backend.dto.CustomerView;
 import com.young.fighter.course.backend.dto.ProductView;
 import com.young.fighter.course.backend.exception.BusinessLogicException;
 import com.young.fighter.course.backend.service.api.BasketService;
 import com.young.fighter.course.backend.service.api.CustomerService;
 import com.young.fighter.course.backend.service.api.ProductService;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Mono;
 
-import javax.transaction.Transactional;
-import java.util.Collections;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -39,67 +37,79 @@ public class DefaultBasketService implements BasketService {
 
     @Override
     @Transactional
-    public BasketView saveToBasket(BasketView view) {
-        Customer customer = customerService.getById(view.getCustomerId());
-        Hibernate.initialize(customer.getBasket());
+    public Mono<BasketView> saveToBasket(BasketView view) {
         if (!(productService.allExist(view.getProducts().stream().map(ProductView::getProductId).collect(Collectors.toList())))) {
             log.error("Can't add to basket, product doesn't exist");
             throw new BusinessLogicException("entity.not.exist");
         }
+        Mono<Customer> customer = customerService.getById(view.getCustomerId())
+                .map(entity -> {
+                    return entity;
+                })
+                .switchIfEmpty(Mono.defer(() -> {
+                    log.error("Can't find customer");
+                    throw new BusinessLogicException("forbidden");
+                }));
         if (view.getBasketId() != null) {
-            if (basketRepository.existsByBasketId(view.getBasketId())
-                    && customer.getBasket() != null
-                    && customer.getBasket().getBasketId().equals(view.getBasketId())) {
+            return customer.doOnSuccess(cust -> {
+                if (!basketRepository.findByBasketId(view.getBasketId())
+                        && cust.getBasketId() != null
+                        && cust.getBasketId().equals(view.getBasketId())) {
+                    log.error("Customer was changed");
+                    throw new BusinessLogicException("forbidden");
+                }
                 log.info("Update basket for customer: {}", view.getCustomerId());
-                return mapper.map(basketRepository.save(mapper.map(view, Basket.class)), BasketView.class);
-            } else {
-                log.error("Customer was changed");
-                throw new BusinessLogicException("forbidden");
-            }
+            })
+                    .then(basketRepository.save(mapper.map(view, Basket.class)))
+                    .map(basket -> mapper.map(basket, BasketView.class));
         }
-        log.info("Creating new basket for customer: {}", customer.getCustomerId());
-        Basket newBasket = basketRepository.save(
-                new Basket(null,
-                        customer,
-                        view.getProducts().stream()
-                                .map(productView -> mapper.map(productView, Product.class))
-                                .collect(Collectors.toList()),
-                        0L)
-        );
-        customer.setBasket(newBasket);
-        customerService.save(customer);
-        return mapper.map(newBasket, BasketView.class);
+        return customer.flatMap(cust -> {
+            log.info("Creating new basket for customer: {}", cust.getCustomerId());
+            return basketRepository.save(
+                    new Basket(null,
+                            cust.getCustomerId(),
+                            0L)
+            )
+                    .map(basket -> {
+                        cust.setBasketId(basket.getBasketId());
+                        customerService.save(cust);
+                        return basket;
+                    });
+        })
+                .map(basket -> mapper.map(basket, BasketView.class));
 
     }
 
     @Override
-    public Basket clear(Long basketId) {
-        Optional<Basket> optionalBasket = basketRepository.findById(basketId);
-        if (optionalBasket.isPresent()) {
-            Basket basket = optionalBasket.get();
-            basket.setProducts(Collections.emptyList());
-            basket.setTotalCost(0L);
-            return basketRepository.save(basket);
-        } else {
-            log.error("Can not find basket with id: {}", basketId);
-            throw new BusinessLogicException("entity.not.exist");
-        }
+    public Mono<Basket> clear(Long basketId) {
+        return basketRepository.findById(basketId)
+                .switchIfEmpty(Mono.defer(() -> {
+                    log.error("Can not find basket with id: {}", basketId);
+                    throw new BusinessLogicException("entity.not.exist");
+                }))
+                .map(basket -> {
+                    basket.setTotalCost(0L);
+                    return basket;
+                })
+                .doOnSuccess(basketRepository::save);
     }
 
     @Override
-    public BasketView findByUserId(Long userId) {
-        Optional<Basket> basket = basketRepository.findByCustomerCustomerId(customerService.findByUserId(userId).getCustomerId());
-        if (basket.isPresent()) {
-            return mapper.map(basket.get(), BasketView.class);
-        } else {
-            log.error("Can not find basket with customerId: {}", userId);
-            throw new BusinessLogicException("entity.not.exist");
-        }
+    public Mono<BasketView> findByUserId(Long userId) {
+        return customerService.findByUserId(userId)
+                .map(CustomerView::getCustomerId)
+//                .doOnSuccess(basketRepository::findByCustomer_CustomerId)
+                .switchIfEmpty(Mono.defer(() -> {
+                    log.error("Can not find basket with customerId: {}", userId);
+                    throw new BusinessLogicException("entity.not.exist");
+                }))
+                .map(entity ->
+                        mapper.map(entity, BasketView.class));
     }
 
     @Override
-    public Basket createNewBasket(Customer customer) {
-        return basketRepository.save(new Basket(null, customer, null, 0L));
+    public Mono<Basket> createNewBasket(Customer customer) {
+        return basketRepository.save(new Basket(null, customer.getCustomerId(), 0L));
     }
 
 }

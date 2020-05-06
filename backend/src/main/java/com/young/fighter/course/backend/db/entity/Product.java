@@ -1,9 +1,9 @@
 package com.young.fighter.course.backend.db.entity;
 
 import lombok.*;
-
-import javax.persistence.*;
-import java.util.List;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 @EqualsAndHashCode(callSuper = false)
 @Getter
@@ -11,25 +11,18 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(schema = "course", name = "product")
+@Table("course.product")
 public class Product extends BusinessEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column("product_id")
     private Long productId;
 
+    @Column("price")
     private Long price;
 
+    @Column("product_name")
     private String productName;
 
+    @Column("product_desc")
     private String productDesc;
-
-    @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY)
-    private List<Basket> baskets;
-
-    @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY)
-    private List<Catalog> catalogs;
-
-    @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY)
-    private List<Bill> bills;
 }

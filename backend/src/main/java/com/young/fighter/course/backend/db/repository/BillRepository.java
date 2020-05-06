@@ -2,10 +2,9 @@ package com.young.fighter.course.backend.db.repository;
 
 import com.young.fighter.course.backend.db.entity.Bill;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
-import reactor.core.publisher.Flux;
 
 public interface BillRepository extends ReactiveCrudRepository<Bill, Long> {
-    Flux<Bill> findAllByCustomerCustomerId(Long customerId);
-
-    void deleteAllByCustomerCustomerId(Long customerId);
+//    Flux<Bill> findAllByCustomerCustomerId(Long customerId);
+//
+//    void deleteAllByCustomerCustomerId(Long customerId);
 }

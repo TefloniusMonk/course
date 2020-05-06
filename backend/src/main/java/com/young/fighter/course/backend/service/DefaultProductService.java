@@ -6,14 +6,13 @@ import com.young.fighter.course.backend.dto.ProductView;
 import com.young.fighter.course.backend.exception.BusinessLogicException;
 import com.young.fighter.course.backend.service.api.ProductService;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Slf4j
@@ -61,8 +60,6 @@ public class DefaultProductService implements ProductService {
     public Mono<ProductView> findById(Long id) {
         return productRepository.findById(id)
                 .map(entity -> {
-                    Hibernate.initialize(entity.getBaskets());
-                    Hibernate.initialize(entity.getCatalogs());
                     return mapper.map(entity, ProductView.class);
                 })
                 .switchIfEmpty(Mono.defer(() -> {
@@ -76,8 +73,6 @@ public class DefaultProductService implements ProductService {
     public Flux<ProductView> findAll() {
         return productRepository.findAll()
                 .map(entity -> {
-                    Hibernate.initialize(entity.getBaskets());
-                    Hibernate.initialize(entity.getCatalogs());
                     return mapper.map(entity, ProductView.class);
                 });
     }
