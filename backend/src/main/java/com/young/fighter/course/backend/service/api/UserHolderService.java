@@ -1,7 +1,8 @@
 package com.young.fighter.course.backend.service.api;
 
 import com.young.fighter.course.backend.security.entity.CurrentUser;
+import reactor.core.publisher.Mono;
 
 public interface UserHolderService {
-    CurrentUser getUserFromContext();
+    Mono<CurrentUser> getUserFromContext();
 }

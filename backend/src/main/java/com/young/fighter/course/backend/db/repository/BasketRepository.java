@@ -1,12 +1,11 @@
 package com.young.fighter.course.backend.db.repository;
 
 import com.young.fighter.course.backend.db.entity.Basket;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import reactor.core.publisher.Mono;
 
-import java.util.Optional;
-
-public interface BasketRepository extends JpaRepository<Basket, Long> {
+public interface BasketRepository extends ReactiveCrudRepository<Basket, Long> {
     boolean existsByBasketId(Long id);
 
-    Optional<Basket> findByCustomerCustomerId(Long customerId);
+    Mono<Basket> findByCustomerCustomerId(Long customerId);
 }

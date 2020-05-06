@@ -10,10 +10,11 @@ import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -28,56 +29,57 @@ public class DefaultProductService implements ProductService {
     }
 
     @Override
-    public ProductView save(ProductView view) {
+    public Mono<ProductView> save(ProductView view) {
         if (view.getProductId() != null) {
-            if (productRepository.findById(view.getProductId()).isPresent()) {
-                ProductView productView = mapper.map(productRepository.save(mapper.map(view, Product.class)), ProductView.class);
-                log.info("Creating new product: {}", productView.toString());
-                return productView;
-            } else {
-                log.error("Cannot find product with id: {}", view.getProductId());
-                throw new BusinessLogicException("entity.not.exist");
-            }
+            return productRepository.findById(view.getProductId())
+                    .switchIfEmpty(Mono.defer(() -> {
+                        log.error("Cannot find product with id: {}", view.getProductId());
+                        throw new BusinessLogicException("entity.not.exist");
+                    }))
+                    .then(productRepository.save(mapper.map(view, Product.class)))
+                    .map(entity -> {
+                        log.info("Creating new product: {}", entity.toString());
+                        return mapper.map(entity, ProductView.class);
+                    });
         }
         log.info("Updating product: {}", view.toString());
-        return mapper.map(productRepository.save(mapper.map(view, Product.class)), ProductView.class);
+        return productRepository.save(mapper.map(view, Product.class))
+                .map(entity -> mapper.map(entity, ProductView.class));
     }
 
     @Override
-    public void delete(Long id) {
-        if (productRepository.findById(id).isPresent()) {
-            log.info("Deleting product with id: {}", id);
-            productRepository.deleteById(id);
-        } else {
-            log.error("Can not delete product with id: {}", id);
-            throw new BusinessLogicException("entity.not.exist");
-        }
-    }
-
-    @Override
-    @Transactional
-    public ProductView findById(Long id) {
-        if (productRepository.findById(id).isPresent()) {
-            Product product = productRepository.findById(id).get();
-            Hibernate.initialize(product.getBaskets());
-            Hibernate.initialize(product.getCatalogs());
-            return mapper.map(product, ProductView.class);
-        } else {
-            log.error("Product with id {} doesn't exist", id);
-            throw new BusinessLogicException("entity.not.exist");
-        }
+    public Mono<Void> delete(Long id) {
+        return productRepository.deleteById(id)
+                .doOnError(error -> {
+                    log.error("Can not delete product with id: {}", id);
+                    throw new BusinessLogicException("entity.not.exist");
+                });
     }
 
     @Override
     @Transactional
-    public List<ProductView> findAll() {
-        return productRepository.findAll().stream()
+    public Mono<ProductView> findById(Long id) {
+        return productRepository.findById(id)
                 .map(entity -> {
                     Hibernate.initialize(entity.getBaskets());
                     Hibernate.initialize(entity.getCatalogs());
                     return mapper.map(entity, ProductView.class);
                 })
-                .collect(Collectors.toList());
+                .switchIfEmpty(Mono.defer(() -> {
+                    log.error("Product with id {} doesn't exist", id);
+                    throw new BusinessLogicException("entity.not.exist");
+                }));
+    }
+
+    @Override
+    @Transactional
+    public Flux<ProductView> findAll() {
+        return productRepository.findAll()
+                .map(entity -> {
+                    Hibernate.initialize(entity.getBaskets());
+                    Hibernate.initialize(entity.getCatalogs());
+                    return mapper.map(entity, ProductView.class);
+                });
     }
 
     @Override

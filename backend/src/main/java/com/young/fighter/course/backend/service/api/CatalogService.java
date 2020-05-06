@@ -1,15 +1,15 @@
 package com.young.fighter.course.backend.service.api;
 
 import com.young.fighter.course.backend.dto.CatalogView;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface CatalogService {
-    CatalogView save(CatalogView view);
+    Mono<CatalogView> save(CatalogView view);
 
-    void delete(Long id);
+    Mono<Void> delete(Long id);
 
-    CatalogView findById(Long id);
+    Mono<CatalogView> findById(Long id);
 
-    List<CatalogView> findAll();
+    Flux<CatalogView> findAll();
 }

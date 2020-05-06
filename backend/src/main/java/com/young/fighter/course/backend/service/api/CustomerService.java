@@ -2,21 +2,21 @@ package com.young.fighter.course.backend.service.api;
 
 import com.young.fighter.course.backend.db.entity.Customer;
 import com.young.fighter.course.backend.dto.CustomerView;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface CustomerService {
-    CustomerView save(CustomerView view, Long userId);
+    Mono<CustomerView> save(CustomerView view, Long userId);
 
-    Customer save(Customer customer);
+    Mono<Customer> save(Customer customer);
 
     void delete(Long id);
 
-    CustomerView findByUserId(Long id);
+    Mono<CustomerView> findByUserId(Long id);
 
-    List<CustomerView> findAll();
+    Flux<CustomerView> findAll();
 
     boolean exist(Long id);
 
-    Customer getById(Long id);
+    Mono<Customer> getById(Long id);
 }

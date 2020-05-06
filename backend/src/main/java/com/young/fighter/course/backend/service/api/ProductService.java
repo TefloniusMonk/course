@@ -1,17 +1,19 @@
 package com.young.fighter.course.backend.service.api;
 
 import com.young.fighter.course.backend.dto.ProductView;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
 public interface ProductService {
-    ProductView save(ProductView view);
+    Mono<ProductView> save(ProductView view);
 
-    void delete(Long id);
+    Mono<Void> delete(Long id);
 
-    ProductView findById(Long id);
+    Mono<ProductView> findById(Long id);
 
-    List<ProductView> findAll();
+    Flux<ProductView> findAll();
 
     boolean allExist(List<Long> ids);
 

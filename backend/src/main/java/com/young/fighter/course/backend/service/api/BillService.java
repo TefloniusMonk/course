@@ -2,17 +2,16 @@ package com.young.fighter.course.backend.service.api;
 
 import com.young.fighter.course.backend.dto.BasketView;
 import com.young.fighter.course.backend.dto.BillView;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface BillService {
-    BillView sale(BasketView view);
+    Mono<BillView> sale(BasketView view);
 
-//    void delete(Long id);
 
-    BillView findById(Long userId, Long id);
+    Mono<BillView> findById(Long userId, Long id);
 
-    List<BillView> findAll(Long userId);
+    Flux<BillView> findAll(Long userId);
 
     void deleteAllByCustomerId(Long customerId);
 }

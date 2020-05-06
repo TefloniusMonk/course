@@ -2,13 +2,12 @@ package com.young.fighter.course.backend.db.repository;
 
 
 import com.young.fighter.course.backend.db.entity.User;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.List;
-import java.util.Optional;
-
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends ReactiveCrudRepository<User, Long> {
     boolean existsUserByLoginOrEmailAndUserIdNot(String login, String email, Long id);
 
 
@@ -28,7 +27,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
                     "        SELECT role_id\n" +
                     "        FROM org.user_roles\n" +
                     "        WHERE user_id = 1));")
-    List<String> getAuthorities(Long userId);
+    Flux<String> getAuthorities(Long userId);
 
-    Optional<User> findUserByLoginAndPassword(String login, String password);
+    Mono<User> findUserByLoginAndPassword(String login, String password);
 }

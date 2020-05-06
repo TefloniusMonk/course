@@ -1,12 +1,11 @@
 package com.young.fighter.course.backend.db.repository;
 
 import com.young.fighter.course.backend.db.entity.Bill;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import reactor.core.publisher.Flux;
 
-import java.util.List;
-
-public interface BillRepository extends JpaRepository<Bill, Long> {
-    List<Bill> findAllByCustomerCustomerId(Long customerId);
+public interface BillRepository extends ReactiveCrudRepository<Bill, Long> {
+    Flux<Bill> findAllByCustomerCustomerId(Long customerId);
 
     void deleteAllByCustomerCustomerId(Long customerId);
 }
